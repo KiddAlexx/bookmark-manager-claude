@@ -2,3 +2,4 @@ step,date,surface,step_name,status,time_spent_minutes,files_created,files_modifi
 1,2026-04-01,shared,Project Scaffold,complete,45,12,3,0,2,2,"Next.js downgraded 16→15; app/ migrated to src/app/"
 2,2026-04-01,shared,Types + Schemas + URL Utils + Service Layer,complete,40,6,2,17,0,0,"Zod as source of truth; archive-wins-pin decision; 17 url tests passing"
 3,2026-04-01,shared,Zustand Stores,complete,20,3,1,0,1,1,"Stream error mid-step; reran verification in next session — clean"
+4,2026-04-01,web,Layout Shell,complete,60,6,4,0,2,2,"next-themes + semantic tokens adopted mid-step; focus ring conflict fixed"

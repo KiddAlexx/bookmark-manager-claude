@@ -3,7 +3,7 @@
 ## Current Status
 
 **Phase**: 1 — Full UI with Local Data
-**Active Step**: Step 3 complete — awaiting approval to proceed to Step 4
+**Active Step**: Step 4 complete — awaiting approval to proceed to Step 5
 
 ---
 
@@ -14,12 +14,18 @@
 | 1 | Project Scaffold | 2026-04-01 | ✅ Complete |
 | 2 | Types, Schemas, URL Utils, Service Layer | 2026-04-01 | ✅ Complete |
 | 3 | Zustand Stores | 2026-04-01 | ✅ Complete |
+| 4 | Layout Shell | 2026-04-01 | ✅ Complete |
 
 ---
 
 ## Next Planned Step
 
-**Step 4** — Layout + navigation shell: sidebar, header, main content area, responsive structure, theme toggle wired up.
+**Step 5** — Bookmark card + list components, section titles, empty state, sort control shell.
+
+Sub-tasks:
+- 5a: `BookmarkCard.tsx` — renders all fields, action buttons (copy, visit, pin, archive, edit, delete)
+- 5b: `BookmarkList.tsx` + `PinnedSection.tsx` — renders pinned section above main list
+- 5c: `EmptyState.tsx` + wire list into `page.tsx` from bookmarkStore
 
 ---
 
