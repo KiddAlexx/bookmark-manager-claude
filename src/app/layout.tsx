@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { Providers } from "@/components/Providers";
 import { AppInit } from "@/components/AppInit";
 import "./globals.css";
 
@@ -21,11 +22,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${manrope.variable} h-full`}>
+    <html lang="en" className={`${manrope.variable} h-full`} suppressHydrationWarning>
       <body className="min-h-full font-sans antialiased">
+        <Providers>
           <AppInit />
           {children}
-        </body>
+        </Providers>
+      </body>
     </html>
   );
 }

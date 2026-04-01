@@ -34,6 +34,15 @@
   --color-danger-600: #fd4740;
   --color-danger-800: #cb0a04;
 
+  /* ─── Semantic tokens (light defaults — overridden in .dark below) ── */
+  --color-canvas: #e8f0ef;
+  --color-surface: #ffffff;
+  --color-surface-alt: #e8f0ef;
+  --color-ink: #051513;
+  --color-ink-sub: #4c5c59;
+  --color-ink-muted: #899492;
+  --color-line: #dde9e7;
+
   /* ─── Border Radius ─────────────────────────────────────── */
   --radius-4: 4px;
   --radius-6: 6px;
@@ -71,6 +80,21 @@
   --spacing-1400: 112px;
   --spacing-1600: 128px;
   --spacing-1800: 140px;
+}
+
+/*
+ * Semantic token overrides for dark mode.
+ * next-themes adds .dark to <html>; CSS cascade picks these values up.
+ * Components only use semantic classes (bg-surface, text-ink, etc.) — no dark: variants.
+ */
+.dark {
+  --color-canvas: #002e2d;
+  --color-surface: #004241;
+  --color-surface-alt: #004746;
+  --color-ink: #ffffff;
+  --color-ink-sub: #b1b9b9;
+  --color-ink-muted: #b1b9b9;
+  --color-line: #004746;
 }
 
 /* Base */

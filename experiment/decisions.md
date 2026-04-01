@@ -42,6 +42,19 @@
 
 ---
 
+## [2026-04-01] Decision: next-themes + semantic CSS tokens for dark mode
+
+**Context**: Initial implementation used a Zustand themeStore to manage the `.dark` class on `<html>`, with components using paired `dark:` Tailwind variants. Two problems: (1) no SSR flash prevention — the class was applied client-side after hydration; (2) every component needed two colour classes per property.
+**Options considered**:
+- Keep Zustand themeStore + add blocking script for SSR flash prevention manually
+- Replace with `next-themes` (handles SSR flash, system preference, persistence)
+- Adopt semantic CSS tokens so components use one class instead of dark: pairs
+**Decision**: Use `next-themes` for theme management + semantic tokens in `globals.css` for styling. `themeStore.ts` becomes a thin re-export of `useTheme` from next-themes.
+**Rationale**: next-themes is purpose-built for this exact problem in Next.js. Semantic tokens eliminate all `dark:` variant duplication in components. Both changes together materially improve UX and maintainability.
+**Consequences**: `suppressHydrationWarning` required on `<html>`. Components must use semantic classes (`bg-surface`, `text-ink`, etc.) — raw palette tokens with `dark:` pairs are prohibited. `themeStore.ts` is a re-export shim, not a Zustand store.
+
+---
+
 ## [2026-04-01] Decision: Zod as single source of truth for types
 
 **Context**: AGENTS.md states "Zod schemas are the source of truth for runtime validation — derive TypeScript types with `z.infer<typeof schema>`". The initial `src/types/index.ts` defined raw interfaces.

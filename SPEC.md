@@ -43,6 +43,7 @@ If a version decision changes during implementation, the reason must be document
 | Cloudinary | latest stable SDK | Image storage — avatars and favicons |
 | Cheerio | latest stable | Server-side HTML parsing for metadata fetch |
 | WXT | latest stable | Browser extension framework — Manifest V3, Chrome + Firefox |
+| next-themes | latest stable | Theme management — SSR flash prevention, system preference, class toggle |
 | Lucide React | latest stable | Icons |
 | next/font | built-in | Google Fonts, zero layout shift |
 | Vitest | latest stable | Unit and integration tests |
@@ -282,10 +283,9 @@ Server-side Route Handler at `POST /api/metadata`:
 ### 7. Theme
 
 - Two modes: light and dark
-- Tailwind v4 dark mode via `class` on `<html>` element
-- All color tokens defined as CSS custom properties in `globals.css`
-- Phase 1: preference persisted to `localStorage`
-- Phase 2: preference persisted to user record in DB, synced across devices
+- Managed by `next-themes`: adds `.dark` class to `<html>`, handles SSR flash prevention, system preference, and localStorage persistence automatically
+- Semantic CSS tokens in `globals.css` define what changes per theme — components use single token classes, never `dark:` variant pairs
+- Phase 2: preference also persisted to user record in DB, synced across devices
 - Default: system preference via `prefers-color-scheme`, fallback to light
 
 ---

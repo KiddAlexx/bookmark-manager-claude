@@ -80,6 +80,7 @@ If a version decision changes during implementation, the reason must be document
 | Image hosting          | Cloudinary                     | latest stable SDK |
 | HTML parsing           | Cheerio                        | latest stable     |
 | Extension              | WXT (Manifest V3)              | latest stable     |
+| Theme                  | next-themes                    | latest stable     |
 | Icons                  | Lucide React                   | latest stable     |
 | Fonts                  | next/font (Google Fonts)       | built-in          |
 | Unit/integration tests | Vitest + React Testing Library | latest stable     |
@@ -151,7 +152,8 @@ These are non-negotiable constraints on how the system is structured:
 ### State (Zustand)
 
 - All global state lives in Zustand stores under `/src/store/`
-- Two stores: `bookmarkStore.ts` and `themeStore.ts`
+- One Zustand store: `bookmarkStore.ts`
+- Theme state is managed by `next-themes` — import `useTheme` via `@/store/themeStore` re-export for a consistent module path
 - Derived/computed data (filtered lists, sorted lists) must use `useMemo` — never stored in state
 - Stores call the service layer (`/src/lib/services/`) only — never call localStorage or DB directly
 
@@ -175,10 +177,14 @@ These are non-negotiable constraints on how the system is structured:
 ### Styling
 
 - Tailwind CSS v4 — CSS-first configuration via `@theme` in `globals.css`
-- Dark mode via `class` strategy on `<html>` element
-- All color tokens defined as CSS custom properties in `globals.css`
+- Dark mode via `class` strategy on `<html>` element — managed by `next-themes`
+- Raw palette tokens defined in `@theme` (e.g. `neutral-light-900`, `teal-700`)
+- Semantic tokens defined in `@theme` with `.dark {}` overrides (e.g. `surface`, `ink`, `canvas`)
+- **Components must use semantic token classes only** — never pair raw tokens with `dark:` variants
+- Semantic token naming: `bg-surface`, `bg-surface-alt`, `bg-canvas`, `text-ink`, `text-ink-sub`, `text-ink-muted`, `border-line`
 - Design tokens must match Figma exactly (colors, spacing, border-radius, typography)
 - No magic numbers — always use design token values or Tailwind scale values
+- Focus rings use `ring` utilities: `focus-visible:ring-2 focus-visible:ring-teal-700 focus-visible:ring-offset-2 focus-visible:outline-none`
 
 ### Accessibility
 
