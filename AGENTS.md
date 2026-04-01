@@ -352,7 +352,7 @@ After completing a step:
 3. Update `/experiment/summary.md`
 4. Add any decisions to `/experiment/decisions.md`
 5. Update `/experiment/metrics.csv`
-6. Stage all changes and commit with a conventional commit message. Do not push. Keep the subject under 72 characters.
+6. Output a conventional commit message (subject under 72 characters). Do not stage or commit — wait for the user to confirm before committing.
 7. Ask: "Step X is complete. Shall I proceed to Step X+1?"
 8. STOP — do not begin the next step until the user replies with approval
 
