@@ -7,11 +7,13 @@ import { MobileSidebarDrawer } from "@/components/layout/MobileSidebarDrawer"
 import { PinnedSection } from "@/components/bookmark/PinnedSection"
 import { BookmarkList } from "@/components/bookmark/BookmarkList"
 import { EmptyState } from "@/components/bookmark/EmptyState"
+import { TagFilter } from "@/components/bookmark/TagFilter"
 import { useBookmarkStore } from "@/store/bookmarkStore"
 
 export default function Home() {
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [query, setQuery] = useState("")
+  const [selectedTags, setSelectedTags] = useState<string[]>([])
   const bookmarks = useBookmarkStore((s) => s.bookmarks)
 
   const togglePin = useBookmarkStore((s) => s.togglePin)
@@ -20,24 +22,50 @@ export default function Home() {
   const remove = useBookmarkStore((s) => s.remove)
   const recordVisit = useBookmarkStore((s) => s.recordVisit)
 
+  const allTags = useMemo(() => {
+    const tagSet = new Set<string>()
+    bookmarks.forEach((b) => {
+      if (!b.isArchived) b.tags.forEach((t) => tagSet.add(t))
+    })
+    return Array.from(tagSet).sort()
+  }, [bookmarks])
+
   const { pinned, unpinned } = useMemo(() => {
     const lc = query.toLowerCase()
-    const active = bookmarks.filter(
-      (b) => !b.isArchived && b.title.toLowerCase().includes(lc),
-    )
+    const active = bookmarks.filter((b) => {
+      if (b.isArchived) return false
+      if (!b.title.toLowerCase().includes(lc)) return false
+      if (selectedTags.length > 0 && !selectedTags.some((t) => b.tags.includes(t))) return false
+      return true
+    })
     return {
       pinned: active.filter((b) => b.isPinned),
       unpinned: active.filter((b) => !b.isPinned),
     }
-  }, [bookmarks, query])
+  }, [bookmarks, query, selectedTags])
 
   const isEmpty = pinned.length === 0 && unpinned.length === 0
+
+  function toggleTag(tag: string) {
+    setSelectedTags((prev) =>
+      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag],
+    )
+  }
+
+  const tagFilter = (
+    <TagFilter
+      tags={allTags}
+      selected={selectedTags}
+      onToggle={toggleTag}
+      onReset={() => setSelectedTags([])}
+    />
+  )
 
   return (
     <div className="flex h-screen overflow-hidden bg-canvas">
       {/* Desktop sidebar */}
       <div className="hidden lg:flex">
-        <Sidebar />
+        <Sidebar tagFilter={tagFilter} />
       </div>
 
       {/* Main area */}

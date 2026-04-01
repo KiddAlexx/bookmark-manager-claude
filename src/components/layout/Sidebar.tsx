@@ -9,7 +9,11 @@ const navLinks = [
   { href: "/archived", label: "Archived", icon: Archive },
 ]
 
-export function Sidebar() {
+interface SidebarProps {
+  tagFilter?: React.ReactNode
+}
+
+export function Sidebar({ tagFilter }: SidebarProps) {
   const pathname = usePathname()
 
   return (
@@ -56,8 +60,7 @@ export function Sidebar() {
         <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-ink-muted">
           Tags
         </p>
-        {/* Tag filter list — wired up in Step 6 */}
-        <ul aria-label="Filter by tag" className="space-y-1" />
+        {tagFilter}
       </div>
     </aside>
   )
