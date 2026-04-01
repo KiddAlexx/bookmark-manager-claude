@@ -1,12 +1,33 @@
 "use client"
 
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import { Sidebar } from "@/components/layout/Sidebar"
 import { Header } from "@/components/layout/Header"
 import { MobileSidebarDrawer } from "@/components/layout/MobileSidebarDrawer"
+import { PinnedSection } from "@/components/bookmark/PinnedSection"
+import { BookmarkList } from "@/components/bookmark/BookmarkList"
+import { EmptyState } from "@/components/bookmark/EmptyState"
+import { useBookmarkStore } from "@/store/bookmarkStore"
 
 export default function Home() {
   const [drawerOpen, setDrawerOpen] = useState(false)
+  const bookmarks = useBookmarkStore((s) => s.bookmarks)
+
+  const togglePin = useBookmarkStore((s) => s.togglePin)
+  const archive = useBookmarkStore((s) => s.archive)
+  const unarchive = useBookmarkStore((s) => s.unarchive)
+  const remove = useBookmarkStore((s) => s.remove)
+  const recordVisit = useBookmarkStore((s) => s.recordVisit)
+
+  const { pinned, unpinned } = useMemo(() => {
+    const active = bookmarks.filter((b) => !b.isArchived)
+    return {
+      pinned: active.filter((b) => b.isPinned),
+      unpinned: active.filter((b) => !b.isPinned),
+    }
+  }, [bookmarks])
+
+  const isEmpty = pinned.length === 0 && unpinned.length === 0
 
   return (
     <div className="flex h-screen overflow-hidden bg-canvas">
@@ -26,8 +47,29 @@ export default function Home() {
           className="flex-1 overflow-y-auto p-4 sm:p-6"
           aria-label="Bookmarks"
         >
-          {/* Bookmark list — wired in Step 5 */}
-          <p className="text-sm text-ink-muted">Loading bookmarks…</p>
+          {isEmpty ? (
+            <EmptyState />
+          ) : (
+            <>
+              <PinnedSection
+                bookmarks={pinned}
+                onEdit={() => {}}
+                onDelete={remove}
+                onPin={togglePin}
+                onArchive={archive}
+                onVisit={recordVisit}
+              />
+              <BookmarkList
+                bookmarks={unpinned}
+                onEdit={() => {}}
+                onDelete={remove}
+                onPin={togglePin}
+                onArchive={archive}
+                onUnarchive={unarchive}
+                onVisit={recordVisit}
+              />
+            </>
+          )}
         </main>
       </div>
 
