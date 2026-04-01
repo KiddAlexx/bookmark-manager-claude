@@ -23,6 +23,11 @@ function formatDate(iso: string): string {
   return new Date(iso).toLocaleDateString("en-GB", { day: "numeric", month: "short" })
 }
 
+function isValidFaviconSrc(src: string | null | undefined): src is string {
+  if (!src) return false
+  return src.startsWith("/") || src.startsWith("http://") || src.startsWith("https://")
+}
+
 export function BookmarkCard({
   bookmark, onEdit, onDelete, onPin, onArchive, onUnarchive, onVisit,
 }: BookmarkCardProps) {
@@ -58,7 +63,7 @@ export function BookmarkCard({
       {/* Header */}
       <div className="flex items-start justify-between gap-2">
         <div className="flex min-w-0 items-center gap-3">
-          {bookmark.favicon ? (
+          {isValidFaviconSrc(bookmark.favicon) ? (
             <Image
               src={bookmark.favicon}
               alt=""

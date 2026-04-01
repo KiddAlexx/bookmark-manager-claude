@@ -8,12 +8,14 @@ import { PinnedSection } from "@/components/bookmark/PinnedSection"
 import { BookmarkList } from "@/components/bookmark/BookmarkList"
 import { EmptyState } from "@/components/bookmark/EmptyState"
 import { TagFilter } from "@/components/bookmark/TagFilter"
+import { SortControl, type SortMode } from "@/components/bookmark/SortControl"
 import { useBookmarkStore } from "@/store/bookmarkStore"
 
 export default function Home() {
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [query, setQuery] = useState("")
   const [selectedTags, setSelectedTags] = useState<string[]>([])
+  const [sortBy, setSortBy] = useState<SortMode>("recently-added")
   const bookmarks = useBookmarkStore((s) => s.bookmarks)
 
   const togglePin = useBookmarkStore((s) => s.togglePin)
@@ -38,11 +40,26 @@ export default function Home() {
       if (selectedTags.length > 0 && !selectedTags.some((t) => b.tags.includes(t))) return false
       return true
     })
+
+    const sorted = [...active].sort((a, b) => {
+      if (sortBy === "recently-added") {
+        return new Date(b.dateAdded).getTime() - new Date(a.dateAdded).getTime()
+      }
+      if (sortBy === "most-visited") {
+        return b.viewCount - a.viewCount
+      }
+      // recently-visited — nulls last
+      if (!a.lastVisited && !b.lastVisited) return 0
+      if (!a.lastVisited) return 1
+      if (!b.lastVisited) return -1
+      return new Date(b.lastVisited).getTime() - new Date(a.lastVisited).getTime()
+    })
+
     return {
-      pinned: active.filter((b) => b.isPinned),
-      unpinned: active.filter((b) => !b.isPinned),
+      pinned: sorted.filter((b) => b.isPinned),
+      unpinned: sorted.filter((b) => !b.isPinned),
     }
-  }, [bookmarks, query, selectedTags])
+  }, [bookmarks, query, selectedTags, sortBy])
 
   const isEmpty = pinned.length === 0 && unpinned.length === 0
 
@@ -101,6 +118,9 @@ export default function Home() {
                 onArchive={archive}
                 onUnarchive={unarchive}
                 onVisit={recordVisit}
+                sortControl={
+                  <SortControl value={sortBy} onChange={setSortBy} />
+                }
               />
             </>
           )}
