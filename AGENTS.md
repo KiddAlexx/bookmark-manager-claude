@@ -321,40 +321,42 @@ Must cover critical user flows:
 
 Implementation must happen step by step. These rules are mandatory.
 
-### Rule 1 — One Step at a Time
+### Rule 1 — One Sub-task at a Time
 
-NEVER complete more than one step per session.
-NEVER continue to the next step without explicit user approval.
+Each step from the Implementation Plan is broken into numbered sub-tasks (e.g. 2a, 2b, 2c).
+
+NEVER complete more than one sub-task per session.
+NEVER continue to the next sub-task without explicit user approval.
 Do NOT automatically enter plan execution mode.
-Do NOT chain steps together even if they seem small or related.
+Do NOT chain sub-tasks together even if they seem small or related.
 
 ### Rule 2 — Pre-Code Plan Confirmation
 
-Before writing any code for a step:
+Before writing any code for a sub-task:
 
 1. State exactly what you plan to implement
 2. List every file you intend to create or modify
 3. Flag any decisions or ambiguities you have identified
 4. STOP and wait for the user to confirm before proceeding
 
-### Rule 3 — Stop After Each Step
+### Rule 3 — Stop After Each Sub-task
 
-After completing a step:
+After completing a sub-task:
 
-1. Output a visible summary in the chat:
-   - What was implemented
-   - Files created or modified
-   - Key decisions made
-   - Assumptions made
-   - Known issues or limitations
-   - Definition of Done checklist (pass/fail per item — see Definition of Done section)
-2. Write the step log in `/experiment/steps/step-XX.md`
-3. Update `/experiment/summary.md`
-4. Add any decisions to `/experiment/decisions.md`
-5. Update `/experiment/metrics.csv`
-6. Output a conventional commit message (subject under 72 characters). Do not stage or commit — wait for the user to confirm before committing.
-7. Ask: "Step X is complete. Shall I proceed to Step X+1?"
-8. STOP — do not begin the next step until the user replies with approval
+1. Output a brief summary: what was built, files changed, key decisions
+2. Output a conventional commit message (subject under 72 characters). Do not stage or commit — wait for the user to confirm before committing.
+3. Ask: "Sub-task X is complete. Shall I proceed to the next?"
+4. STOP — do not continue until the user approves
+
+After completing the final sub-task of a step:
+
+1. Write the step log in `/experiment/steps/step-XX.md`
+2. Update `/experiment/summary.md`
+3. Add any decisions to `/experiment/decisions.md`
+4. Update `/experiment/metrics.csv`
+5. Output a conventional commit message for the full step. Do not commit — wait for the user to confirm.
+6. Ask: "Step X is complete. Shall I proceed to Step X+1?"
+7. STOP
 
 ### Rule 4 — No Skipping Steps
 

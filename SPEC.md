@@ -521,46 +521,68 @@ Optional enhancements may be noted in `experiment/summary.md` but must not inter
 
 ## Implementation Plan
 
+Each step is broken into sub-tasks (a, b, c…). Each sub-task is implemented, reviewed, and committed separately before the next begins.
+
 ### Phase 1 — Full UI with Local Data
 
-| Step | Scope |
-|---|---|
-| 1 | Project scaffold: Next.js 15, TypeScript, Tailwind v4, Lucide, next/font, Vitest + RTL config, folder structure, design tokens from Figma |
-| 2 | TypeScript types, Zod schemas, URL normalization utility + unit tests, localStorage service layer, data seeding from data.json |
-| 3 | Zustand stores: bookmarkStore (all actions), themeStore (toggle + persist) |
-| 4 | Layout shell: Header, Sidebar, responsive structure, theme toggle wired, mobile sidebar behavior |
-| 5 | BookmarkCard: all display fields, favicon with fallback, all action buttons, hover/focus states, clipboard hook + component tests |
-| 6 | Bookmark list view: pinned section, regular list, sort control, empty states, filter/search/sort composition + unit tests, first Playwright smoke test |
-| 7 | Add/Edit modal: RHF + Zod form, all fields, tag input, metadata fetch (Phase 1: Google Favicon API), validation, loading state + component tests |
-| 8 | Archive view: list, unarchive, delete, empty state, sidebar navigation |
-| 9 | Bookmark detail view: full data display, visit action — confirm modal vs route from Figma first |
-| 10 | Responsiveness pass: mobile, tablet, desktop — all breakpoints, touch targets |
-| 11 | Accessibility pass: keyboard nav, ARIA, focus styles, semantic HTML, live regions |
-| 12 | Polish: all hover/focus states, edge cases, visual QA against Figma, full test pass |
+| Step | Sub-task | Scope |
+|---|---|---|
+| 1 | ✅ complete | Project scaffold: Next.js 15, TypeScript, Tailwind v4, Lucide, next/font, Vitest + RTL config, folder structure, design tokens from Figma |
+| 2a | | TypeScript types (`src/types/index.ts`) + align `data.json` field names to spec |
+| 2b | | Zod schemas (`src/lib/schemas.ts`) derived from types |
+| 2c | | URL normalization utility (`src/lib/utils/url.ts`) + unit tests |
+| 2d | | localStorage service layer (`src/lib/services/bookmarks.ts`, `user.ts`) + data seeding |
+| 3a | | Zustand bookmarkStore: state shape + all actions |
+| 3b | | Zustand themeStore: toggle + localStorage persist |
+| 4a | | Layout shell: Header component (all breakpoints, search bar, add button) |
+| 4b | | Sidebar component: tag list, nav links, desktop layout |
+| 4c | | Mobile sidebar drawer + responsive wiring + theme toggle wired |
+| 5a | | BookmarkCard: all display fields, favicon with fallback, overflow menu |
+| 5b | | BookmarkCard: hover/focus states + clipboard hook + component tests |
+| 6a | | Bookmark list view: pinned section, regular list, empty states |
+| 6b | | Sort control + filter/search/sort composition + unit tests |
+| 6c | | First Playwright smoke test |
+| 7a | | Add/Edit modal shell: RHF + Zod, all fields, tag input |
+| 7b | | Metadata fetch (Phase 1: Google Favicon API), validation, loading state + component tests |
+| 8a | | Archive view: list, unarchive, delete, empty state |
+| 8b | | Sidebar archive navigation link wired |
+| 9 | | Bookmark detail view: full data display, visit action (confirm modal vs route from Figma first) |
+| 10a | | Responsiveness pass: mobile layout + touch targets |
+| 10b | | Responsiveness pass: tablet + desktop layout |
+| 11a | | Accessibility pass: keyboard nav, ARIA, focus styles |
+| 11b | | Accessibility pass: semantic HTML, live regions, motion |
+| 12 | | Polish: hover/focus QA, edge cases, visual QA against Figma, full test pass |
 
 ### Phase 2 — Auth + Database + Images
 
-| Step | Scope |
-|---|---|
-| 13 | Neon setup, Drizzle schema (users, bookmarks, sessions), migrations, drizzle-zod schema generation |
-| 14 | Auth.js v5: login/register pages, Google + GitHub OAuth, email/password, session handling, protected routes |
-| 15 | Migrate service layer from localStorage to Drizzle/Neon — rest of app unchanged |
-| 16 | Metadata API route: Cheerio fetch, title/description/favicon extraction |
-| 17 | Cloudinary integration: favicon upload pipeline in metadata route, avatar upload, secure server-mediated patterns |
-| 18 | Duplicate detection: client-side warning, server-side enforcement, DB unique constraint on (userId, normalizedUrl) |
-| 19 | User profile page: avatar upload, display name edit |
-| 20 | Cross-device theme sync: persist theme preference to user record in DB |
-| 21 | Phase 2 test pass: auth flow E2E, duplicate detection unit tests, API route tests |
+| Step | Sub-task | Scope |
+|---|---|---|
+| 13a | | Neon setup + Drizzle schema (users, bookmarks, sessions) |
+| 13b | | Migrations + drizzle-zod schema generation |
+| 14a | | Auth.js v5: login/register pages + session handling |
+| 14b | | Google + GitHub OAuth + protected routes |
+| 14c | | Email/password credentials provider |
+| 15 | | Migrate service layer from localStorage to Drizzle/Neon |
+| 16 | | Metadata API route: Cheerio fetch, title/description/favicon extraction |
+| 17a | | Cloudinary: favicon upload pipeline in metadata route |
+| 17b | | Cloudinary: avatar upload, secure server-mediated patterns |
+| 18a | | Duplicate detection: client-side warning |
+| 18b | | Duplicate detection: server-side enforcement + DB unique constraint |
+| 19 | | User profile page: avatar upload, display name edit |
+| 20 | | Cross-device theme sync: persist to user record in DB |
+| 21 | | Phase 2 test pass: auth flow E2E, duplicate detection unit tests, API route tests |
 
 ### Phase 3 — Extension + Shortcuts + Final QA
 
-| Step | Scope |
-|---|---|
-| 22 | Keyboard shortcuts: useKeyboardShortcuts hook, all shortcuts wired, help modal + unit tests |
-| 23 | WXT extension scaffold: popup UI, save current page action, auth token handling |
-| 24 | Extension: duplicate detection warning, save confirmation, error states |
-| 25 | Extension E2E: core save flow test, duplicate warning test |
-| 26 | Final QA: full regression, extension + main app integration, all tests passing, performance check |
+| Step | Sub-task | Scope |
+|---|---|---|
+| 22a | | useKeyboardShortcuts hook + all shortcuts wired |
+| 22b | | Keyboard shortcuts help modal + unit tests |
+| 23a | | WXT extension scaffold: popup UI |
+| 23b | | Extension: save current page action + auth token handling |
+| 24 | | Extension: duplicate detection warning, save confirmation, error states |
+| 25 | | Extension E2E: core save flow test, duplicate warning test |
+| 26 | | Final QA: full regression, extension + main app integration, all tests passing, performance check |
 
 ---
 
