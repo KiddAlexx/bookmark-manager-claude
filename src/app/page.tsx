@@ -11,6 +11,7 @@ import { useBookmarkStore } from "@/store/bookmarkStore"
 
 export default function Home() {
   const [drawerOpen, setDrawerOpen] = useState(false)
+  const [query, setQuery] = useState("")
   const bookmarks = useBookmarkStore((s) => s.bookmarks)
 
   const togglePin = useBookmarkStore((s) => s.togglePin)
@@ -20,12 +21,15 @@ export default function Home() {
   const recordVisit = useBookmarkStore((s) => s.recordVisit)
 
   const { pinned, unpinned } = useMemo(() => {
-    const active = bookmarks.filter((b) => !b.isArchived)
+    const lc = query.toLowerCase()
+    const active = bookmarks.filter(
+      (b) => !b.isArchived && b.title.toLowerCase().includes(lc),
+    )
     return {
       pinned: active.filter((b) => b.isPinned),
       unpinned: active.filter((b) => !b.isPinned),
     }
-  }, [bookmarks])
+  }, [bookmarks, query])
 
   const isEmpty = pinned.length === 0 && unpinned.length === 0
 
@@ -41,6 +45,8 @@ export default function Home() {
         <Header
           onAddBookmark={() => {}}
           onMenuOpen={() => setDrawerOpen(true)}
+          searchQuery={query}
+          onSearch={setQuery}
         />
         <main
           id="main-content"

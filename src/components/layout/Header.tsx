@@ -5,9 +5,11 @@ import { Search, Plus, Menu } from "lucide-react"
 interface HeaderProps {
   onAddBookmark: () => void
   onMenuOpen: () => void
+  onSearch?: (query: string) => void
+  searchQuery?: string
 }
 
-export function Header({ onAddBookmark, onMenuOpen }: HeaderProps) {
+export function Header({ onAddBookmark, onMenuOpen, onSearch, searchQuery = "" }: HeaderProps) {
   return (
     <header className="flex items-center gap-3 bg-surface px-4 py-3 sm:px-6">
       {/* Hamburger — visible on mobile/tablet, hidden on desktop */}
@@ -30,6 +32,8 @@ export function Header({ onAddBookmark, onMenuOpen }: HeaderProps) {
           type="search"
           placeholder="Search by title..."
           aria-label="Search bookmarks by title"
+          value={searchQuery}
+          onChange={(e) => onSearch?.(e.target.value)}
           className="w-full rounded-lg border border-transparent bg-surface-alt py-2 pl-9 pr-3 text-sm text-ink placeholder:text-ink-muted focus:border-teal-700 focus:outline-none"
         />
       </div>
