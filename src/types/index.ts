@@ -1,23 +1,12 @@
-export interface Bookmark {
-  id: string
-  userId: string
-  title: string
-  description: string
-  url: string
-  normalizedUrl: string
-  tags: string[]
-  favicon: string | null
-  viewCount: number
-  lastVisited: string | null
-  dateAdded: string
-  isPinned: boolean
-  isArchived: boolean
-}
+import type { z } from "zod"
+import type {
+  BookmarkSchema,
+  UserSchema,
+  AddBookmarkSchema,
+  EditBookmarkSchema,
+} from "@/lib/schemas"
 
-export interface User {
-  id: string
-  name: string
-  email: string
-  avatarUrl: string | null
-  createdAt: string
-}
+export type Bookmark = z.infer<typeof BookmarkSchema>
+export type User = z.infer<typeof UserSchema>
+export type AddBookmarkInput = z.infer<typeof AddBookmarkSchema>
+export type EditBookmarkInput = z.infer<typeof EditBookmarkSchema>
