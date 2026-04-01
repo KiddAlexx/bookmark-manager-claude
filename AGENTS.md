@@ -352,8 +352,9 @@ After completing a step:
 3. Update `/experiment/summary.md`
 4. Add any decisions to `/experiment/decisions.md`
 5. Update `/experiment/metrics.csv`
-6. Ask: "Step X is complete. Shall I proceed to Step X+1?"
-7. STOP — do not begin the next step until the user replies with approval
+6. Stage all changes and commit with a conventional commit message. Do not push. Keep the subject under 72 characters.
+7. Ask: "Step X is complete. Shall I proceed to Step X+1?"
+8. STOP — do not begin the next step until the user replies with approval
 
 ### Rule 4 — No Skipping Steps
 

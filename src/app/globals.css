@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+/* Class-based dark mode — toggles on .dark class added to <html> */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* ─── Font ─────────────────────────────────────────────── */
+  --font-sans: var(--font-manrope), system-ui, sans-serif;
+
+  /* ─── Palette: Light Neutrals ───────────────────────────── */
+  --color-neutral-light-900: #051513;
+  --color-neutral-light-800: #4c5c59;
+  --color-neutral-light-500: #899492;
+  --color-neutral-light-400: #c0cfcc;
+  --color-neutral-light-300: #dde9e7;
+  --color-neutral-light-100: #e8f0ef;
+  --color-neutral-light-0: #ffffff;
+
+  /* ─── Palette: Dark Neutrals ────────────────────────────── */
+  --color-neutral-dark-900: #001414;
+  --color-neutral-dark-800: #001f1f;
+  --color-neutral-dark-600: #002e2d;
+  --color-neutral-dark-500: #004241;
+  --color-neutral-dark-400: #004746;
+  --color-neutral-dark-300: #00706e;
+  --color-neutral-dark-100: #b1b9b9;
+  --color-neutral-dark-0: #ffffff;
+
+  /* ─── Palette: Teal (Primary) ───────────────────────────── */
+  --color-teal-700: #014745;
+  --color-teal-800: #013c3b;
+
+  /* ─── Palette: Red (Danger) ─────────────────────────────── */
+  --color-danger-600: #fd4740;
+  --color-danger-800: #cb0a04;
+
+  /* ─── Border Radius ─────────────────────────────────────── */
+  --radius-4: 4px;
+  --radius-6: 6px;
+  --radius-8: 8px;
+  --radius-10: 10px;
+  --radius-12: 12px;
+  --radius-16: 16px;
+  --radius-20: 20px;
+  --radius-24: 24px;
+  --radius-full: 999px;
+}
+
+/*
+ * Figma spacing scale as CSS custom properties.
+ * Tailwind's built-in scale covers all values (1 unit = 4px).
+ * Use Tailwind classes directly (p-4 = 16px = spacing-200).
+ * These vars are available for arbitrary-value usage: p-[var(--spacing-200)]
+ */
+:root {
+  --spacing-025: 2px;
+  --spacing-050: 4px;
+  --spacing-075: 6px;
+  --spacing-100: 8px;
+  --spacing-125: 10px;
+  --spacing-150: 12px;
+  --spacing-200: 16px;
+  --spacing-250: 20px;
+  --spacing-300: 24px;
+  --spacing-400: 32px;
+  --spacing-500: 40px;
+  --spacing-600: 48px;
+  --spacing-800: 64px;
+  --spacing-1000: 80px;
+  --spacing-1200: 96px;
+  --spacing-1400: 112px;
+  --spacing-1600: 128px;
+  --spacing-1800: 140px;
+}
+
+/* Base */
+html {
+  color-scheme: light;
+}
+
+html.dark {
+  color-scheme: dark;
+}

@@ -1,0 +1,2 @@
+step,date,surface,step_name,status,time_spent_minutes,files_created,files_modified,tests_added,issues_found,issues_fixed,notes
+1,2026-04-01,shared,Project Scaffold,complete,45,12,3,0,2,2,"Next.js downgraded 16→15; app/ migrated to src/app/"
