@@ -42,6 +42,26 @@
 
 ---
 
+## [2026-04-01] Decision: Zod as single source of truth for types
+
+**Context**: AGENTS.md states "Zod schemas are the source of truth for runtime validation — derive TypeScript types with `z.infer<typeof schema>`". The initial `src/types/index.ts` defined raw interfaces.
+**Options considered**: Keep raw interfaces + duplicate in Zod, or make Zod primary and derive interfaces.
+**Decision**: Zod schemas in `src/lib/schemas.ts` are primary; `src/types/index.ts` re-exports `z.infer<>` types only.
+**Rationale**: Single definition point eliminates drift between runtime validation and compile-time types.
+**Consequences**: Any new field must be added to the Zod schema first; the TypeScript type updates automatically.
+
+---
+
+## [2026-04-01] Decision: archive wins over pin conflict
+
+**Context**: A bookmark can be both pinned and archived if toggled in sequence. SPEC does not explicitly state resolution.
+**Options considered**: Block archive if pinned (require unpin first), silently clear pin on archive.
+**Decision**: `archiveBookmark()` sets `isPinned: false` alongside `isArchived: true`.
+**Rationale**: Simplest resolution; archived items never show in the main view so a pinned+archived state would be invisible anyway.
+**Consequences**: Users do not need to unpin before archiving. Unarchiving does not restore pin state.
+
+---
+
 ## [2026-04-01] Decision: Tailwind v4 custom dark mode variant
 
 **Context**: SPEC requires class-based dark mode (`dark` class on `<html>`). Tailwind v4 defaults to `prefers-color-scheme`.

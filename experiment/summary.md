@@ -3,7 +3,7 @@
 ## Current Status
 
 **Phase**: 1 — Full UI with Local Data
-**Active Step**: Step 1 complete — awaiting approval to proceed to Step 2
+**Active Step**: Step 2 complete — awaiting approval to proceed to Step 3
 
 ---
 
@@ -12,19 +12,23 @@
 | Step | Title | Date | Status |
 |------|-------|------|--------|
 | 1 | Project Scaffold | 2026-04-01 | ✅ Complete |
+| 2 | Types, Schemas, URL Utils, Service Layer | 2026-04-01 | ✅ Complete |
 
 ---
 
 ## Next Planned Step
 
-**Step 2** — TypeScript types, Zod schemas, URL normalization utility + unit tests, localStorage service layer, data seeding from data.json.
+**Step 3** — Zustand stores (`bookmarkStore.ts`, `themeStore.ts`) + seed on init + theme class applied to `<html>`.
+
+Sub-tasks:
+- 3a: `themeStore.ts` — light/dark toggle, localStorage persistence, `prefers-color-scheme` init, applies `.dark` class to `<html>`
+- 3b: `bookmarkStore.ts` — wraps service layer, exposes bookmarks state, calls `seedIfEmpty()` on init
 
 ---
 
 ## Blockers / Open Questions
 
-- data.json field names (`pinned`, `visitCount`, `createdAt`) differ from SPEC interface names (`isPinned`, `viewCount`, `dateAdded`) — must be resolved in Step 2.
-- Several design screens are still missing (noted in `design/README.md` → "What Is Still Missing").
+- None currently.
 
 ---
 
@@ -32,6 +36,7 @@
 
 - Font strategy changed from `next/font/google` → `next/font/local` per user instruction (local Manrope .ttf provided).
 - Next.js version is 15.5.14 (SPEC says 15.x ✓).
+- `src/types/index.ts` derives types from Zod schemas (Zod is the source of truth), not raw interfaces.
 
 ---
 
