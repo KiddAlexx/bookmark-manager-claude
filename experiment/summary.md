@@ -3,7 +3,7 @@
 ## Current Status
 
 **Phase**: 1 — Full UI with Local Data
-**Active Step**: Step 2 complete — awaiting approval to proceed to Step 3
+**Active Step**: Step 3 complete — awaiting approval to proceed to Step 4
 
 ---
 
@@ -13,16 +13,13 @@
 |------|-------|------|--------|
 | 1 | Project Scaffold | 2026-04-01 | ✅ Complete |
 | 2 | Types, Schemas, URL Utils, Service Layer | 2026-04-01 | ✅ Complete |
+| 3 | Zustand Stores | 2026-04-01 | ✅ Complete |
 
 ---
 
 ## Next Planned Step
 
-**Step 3** — Zustand stores (`bookmarkStore.ts`, `themeStore.ts`) + seed on init + theme class applied to `<html>`.
-
-Sub-tasks:
-- 3a: `themeStore.ts` — light/dark toggle, localStorage persistence, `prefers-color-scheme` init, applies `.dark` class to `<html>`
-- 3b: `bookmarkStore.ts` — wraps service layer, exposes bookmarks state, calls `seedIfEmpty()` on init
+**Step 4** — Layout + navigation shell: sidebar, header, main content area, responsive structure, theme toggle wired up.
 
 ---
 
