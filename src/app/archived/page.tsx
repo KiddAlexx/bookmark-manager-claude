@@ -126,6 +126,12 @@ export default function Archived() {
           className="flex-1 overflow-y-auto p-4 sm:p-6"
           aria-label="Archived bookmarks"
         >
+          <p aria-live="polite" aria-atomic="true" className="sr-only">
+            {filtered.length === 0
+              ? "No archived bookmarks found."
+              : `${filtered.length} archived bookmark${filtered.length === 1 ? "" : "s"} found.`}
+          </p>
+
           {filtered.length === 0 ? (
             <EmptyState message="No archived bookmarks." />
           ) : (

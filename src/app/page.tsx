@@ -140,6 +140,12 @@ export default function Home() {
           className="flex-1 overflow-y-auto p-4 sm:p-6"
           aria-label="Bookmarks"
         >
+          <p aria-live="polite" aria-atomic="true" className="sr-only">
+            {isEmpty
+              ? "No bookmarks found."
+              : `${pinned.length + unpinned.length} bookmark${pinned.length + unpinned.length === 1 ? "" : "s"} found.`}
+          </p>
+
           {isEmpty ? (
             <EmptyState />
           ) : (
