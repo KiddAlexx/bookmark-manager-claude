@@ -3,7 +3,7 @@
 ## Current Status
 
 **Phase**: 1 — Full UI with Local Data
-**Active Step**: Step 5 complete — awaiting approval to proceed to Step 6
+**Active Step**: Step 7 complete — awaiting approval to proceed to Step 8
 
 ---
 
@@ -16,17 +16,14 @@
 | 3 | Zustand Stores | 2026-04-01 | ✅ Complete |
 | 4 | Layout Shell | 2026-04-01 | ✅ Complete |
 | 5 | Bookmark Card + List Components | 2026-04-01 | ✅ Complete |
+| 6 | Search, Tag Filter, Sort | 2026-04-01 | ✅ Complete |
+| 7 | Archive View | 2026-04-02 | ✅ Complete |
 
 ---
 
 ## Next Planned Step
 
-**Step 6** — Search, tag filter, sort logic + wiring.
-
-Sub-tasks:
-- 6a: Search logic — filter bookmarks by title in `page.tsx`, wire search input in `Header`
-- 6b: Tag filter — `TagFilter` component in `Sidebar`, OR logic, multi-select, reset
-- 6c: Sort control — `SortControl` component, pass into `BookmarkList` sortControl slot, sort logic via `useMemo`
+**Step 8** — Add/Edit bookmark modal: `BookmarkForm` (React Hook Form + Zod), modal wrapper, wire Add button + Edit callbacks in both pages.
 
 ---
 

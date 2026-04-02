@@ -4,3 +4,5 @@ step,date,surface,step_name,status,time_spent_minutes,files_created,files_modifi
 3,2026-04-01,shared,Zustand Stores,complete,20,3,1,0,1,1,"Stream error mid-step; reran verification in next session — clean"
 4,2026-04-01,web,Layout Shell,complete,60,6,4,0,2,2,"next-themes + semantic tokens adopted mid-step; focus ring conflict fixed"
 5,2026-04-01,web,Bookmark Card + List Components,complete,35,4,1,0,0,0,"BookmarkCard + BookmarkList + PinnedSection + EmptyState; wired into page.tsx"
+6,2026-04-01,web,Search + Tag Filter + Sort,complete,45,2,4,0,1,1,"favicon path bug fixed mid-step; isValidFaviconSrc guard added to BookmarkCard"
+7,2026-04-02,web,Archive View,complete,15,0,1,0,0,0,"Stub replaced with full archive page; search/filter/sort/unarchive/delete all wired"
