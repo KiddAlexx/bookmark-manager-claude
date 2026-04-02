@@ -172,6 +172,7 @@ export default function Home() {
       <MobileSidebarDrawer
         isOpen={drawerOpen}
         onClose={() => setDrawerOpen(false)}
+        tagFilter={tagFilter}
       />
 
       <Modal

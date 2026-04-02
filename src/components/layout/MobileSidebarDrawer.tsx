@@ -7,9 +7,10 @@ import { Sidebar } from "./Sidebar"
 interface MobileSidebarDrawerProps {
   isOpen: boolean
   onClose: () => void
+  tagFilter?: React.ReactNode
 }
 
-export function MobileSidebarDrawer({ isOpen, onClose }: MobileSidebarDrawerProps) {
+export function MobileSidebarDrawer({ isOpen, onClose, tagFilter }: MobileSidebarDrawerProps) {
   const drawerRef = useRef<HTMLDivElement>(null)
 
   // ESC closes, body scroll locked while open
@@ -54,7 +55,7 @@ export function MobileSidebarDrawer({ isOpen, onClose }: MobileSidebarDrawerProp
         tabIndex={-1}
         className="relative flex h-full w-[220px] flex-col focus:outline-none"
       >
-        <Sidebar />
+        <Sidebar tagFilter={tagFilter} />
 
         {/* Close button */}
         <button

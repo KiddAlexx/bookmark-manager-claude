@@ -149,6 +149,7 @@ export default function Archived() {
       <MobileSidebarDrawer
         isOpen={drawerOpen}
         onClose={() => setDrawerOpen(false)}
+        tagFilter={tagFilter}
       />
 
       <Modal
