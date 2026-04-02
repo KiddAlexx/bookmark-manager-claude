@@ -176,7 +176,7 @@ function MenuItem({ icon: Icon, label, onClick, danger = false }: MenuItemProps)
       role="menuitem"
       onClick={onClick}
       className={[
-        "flex w-full items-center gap-2.5 px-3 py-2 text-sm transition-colors hover:bg-surface-alt focus-visible:bg-surface-alt focus-visible:outline-none",
+        "flex w-full items-center gap-2.5 px-3 py-2 text-sm transition-colors hover:bg-surface-alt focus-visible:bg-surface-alt focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-teal-700 focus-visible:outline-none",
         danger ? "text-danger-600" : "text-ink-sub",
       ].join(" ")}
     >

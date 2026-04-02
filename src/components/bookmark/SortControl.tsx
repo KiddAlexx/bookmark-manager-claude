@@ -58,7 +58,7 @@ export function SortControl({ value, onChange }: SortControlProps) {
                 <button
                   type="button"
                   onClick={() => { onChange(option.value); setOpen(false) }}
-                  className="flex w-full items-center justify-between px-3 py-2 text-sm text-ink-sub transition-colors hover:bg-surface-alt focus-visible:bg-surface-alt focus-visible:outline-none"
+                  className="flex w-full items-center justify-between px-3 py-2 text-sm text-ink-sub transition-colors hover:bg-surface-alt focus-visible:bg-surface-alt focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-teal-700 focus-visible:outline-none"
                 >
                   {option.label}
                   {isSelected && <Check className="h-3.5 w-3.5 text-teal-700" aria-hidden="true" />}
