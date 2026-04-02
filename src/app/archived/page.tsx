@@ -8,15 +8,24 @@ import { BookmarkList } from "@/components/bookmark/BookmarkList"
 import { EmptyState } from "@/components/bookmark/EmptyState"
 import { TagFilter } from "@/components/bookmark/TagFilter"
 import { SortControl, type SortMode } from "@/components/bookmark/SortControl"
+import { AddEditBookmarkForm } from "@/components/bookmark/AddEditBookmarkForm"
+import { Modal } from "@/components/ui/Modal"
 import { useBookmarkStore } from "@/store/bookmarkStore"
+import type { AddBookmarkInput, Bookmark } from "@/types"
 
 export default function Archived() {
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [query, setQuery] = useState("")
   const [selectedTags, setSelectedTags] = useState<string[]>([])
   const [sortBy, setSortBy] = useState<SortMode>("recently-added")
-  const bookmarks = useBookmarkStore((s) => s.bookmarks)
 
+  // null = closed, undefined = add, Bookmark = edit
+  const [modalBookmark, setModalBookmark] = useState<Bookmark | null | undefined>(null)
+  const modalOpen = modalBookmark !== null
+
+  const bookmarks = useBookmarkStore((s) => s.bookmarks)
+  const add = useBookmarkStore((s) => s.add)
+  const update = useBookmarkStore((s) => s.update)
   const unarchive = useBookmarkStore((s) => s.unarchive)
   const remove = useBookmarkStore((s) => s.remove)
   const recordVisit = useBookmarkStore((s) => s.recordVisit)
@@ -58,6 +67,24 @@ export default function Archived() {
     )
   }
 
+  function openEdit(id: string) {
+    const bm = bookmarks.find((b) => b.id === id)
+    if (bm) setModalBookmark(bm)
+  }
+
+  function closeModal() {
+    setModalBookmark(null)
+  }
+
+  async function handleFormSubmit(data: AddBookmarkInput) {
+    if (modalBookmark) {
+      update(modalBookmark.id, data)
+    } else {
+      add(data)
+    }
+    closeModal()
+  }
+
   const tagFilter = (
     <TagFilter
       tags={allTags}
@@ -75,7 +102,7 @@ export default function Archived() {
 
       <div className="flex flex-1 flex-col overflow-hidden">
         <Header
-          onAddBookmark={() => {}}
+          onAddBookmark={() => setModalBookmark(undefined)}
           onMenuOpen={() => setDrawerOpen(true)}
           searchQuery={query}
           onSearch={setQuery}
@@ -91,7 +118,7 @@ export default function Archived() {
             <BookmarkList
               bookmarks={filtered}
               title="Archived bookmarks"
-              onEdit={() => {}}
+              onEdit={openEdit}
               onDelete={remove}
               onPin={() => {}}
               onArchive={() => {}}
@@ -109,6 +136,19 @@ export default function Archived() {
         isOpen={drawerOpen}
         onClose={() => setDrawerOpen(false)}
       />
+
+      <Modal
+        isOpen={modalOpen}
+        onClose={closeModal}
+        title={modalBookmark ? "Edit bookmark" : "Add bookmark"}
+        titleId="bookmark-modal-title"
+      >
+        <AddEditBookmarkForm
+          bookmark={modalBookmark ?? undefined}
+          onSubmit={handleFormSubmit}
+          onCancel={closeModal}
+        />
+      </Modal>
     </div>
   )
 }

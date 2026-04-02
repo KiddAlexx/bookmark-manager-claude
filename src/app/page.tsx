@@ -9,15 +9,24 @@ import { BookmarkList } from "@/components/bookmark/BookmarkList"
 import { EmptyState } from "@/components/bookmark/EmptyState"
 import { TagFilter } from "@/components/bookmark/TagFilter"
 import { SortControl, type SortMode } from "@/components/bookmark/SortControl"
+import { AddEditBookmarkForm } from "@/components/bookmark/AddEditBookmarkForm"
+import { Modal } from "@/components/ui/Modal"
 import { useBookmarkStore } from "@/store/bookmarkStore"
+import type { AddBookmarkInput, Bookmark } from "@/types"
 
 export default function Home() {
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [query, setQuery] = useState("")
   const [selectedTags, setSelectedTags] = useState<string[]>([])
   const [sortBy, setSortBy] = useState<SortMode>("recently-added")
-  const bookmarks = useBookmarkStore((s) => s.bookmarks)
 
+  // Modal state: null = closed, undefined = add mode, Bookmark = edit mode
+  const [modalBookmark, setModalBookmark] = useState<Bookmark | null | undefined>(null)
+  const modalOpen = modalBookmark !== null
+
+  const bookmarks = useBookmarkStore((s) => s.bookmarks)
+  const add = useBookmarkStore((s) => s.add)
+  const update = useBookmarkStore((s) => s.update)
   const togglePin = useBookmarkStore((s) => s.togglePin)
   const archive = useBookmarkStore((s) => s.archive)
   const unarchive = useBookmarkStore((s) => s.unarchive)
@@ -48,7 +57,6 @@ export default function Home() {
       if (sortBy === "most-visited") {
         return b.viewCount - a.viewCount
       }
-      // recently-visited — nulls last
       if (!a.lastVisited && !b.lastVisited) return 0
       if (!a.lastVisited) return 1
       if (!b.lastVisited) return -1
@@ -69,6 +77,28 @@ export default function Home() {
     )
   }
 
+  function openAdd() {
+    setModalBookmark(undefined)
+  }
+
+  function openEdit(id: string) {
+    const bm = bookmarks.find((b) => b.id === id)
+    if (bm) setModalBookmark(bm)
+  }
+
+  function closeModal() {
+    setModalBookmark(null)
+  }
+
+  async function handleFormSubmit(data: AddBookmarkInput) {
+    if (modalBookmark) {
+      update(modalBookmark.id, data)
+    } else {
+      add(data)
+    }
+    closeModal()
+  }
+
   const tagFilter = (
     <TagFilter
       tags={allTags}
@@ -80,15 +110,13 @@ export default function Home() {
 
   return (
     <div className="flex h-screen overflow-hidden bg-canvas">
-      {/* Desktop sidebar */}
       <div className="hidden lg:flex">
         <Sidebar tagFilter={tagFilter} />
       </div>
 
-      {/* Main area */}
       <div className="flex flex-1 flex-col overflow-hidden">
         <Header
-          onAddBookmark={() => {}}
+          onAddBookmark={openAdd}
           onMenuOpen={() => setDrawerOpen(true)}
           searchQuery={query}
           onSearch={setQuery}
@@ -104,7 +132,7 @@ export default function Home() {
             <>
               <PinnedSection
                 bookmarks={pinned}
-                onEdit={() => {}}
+                onEdit={openEdit}
                 onDelete={remove}
                 onPin={togglePin}
                 onArchive={archive}
@@ -112,7 +140,7 @@ export default function Home() {
               />
               <BookmarkList
                 bookmarks={unpinned}
-                onEdit={() => {}}
+                onEdit={openEdit}
                 onDelete={remove}
                 onPin={togglePin}
                 onArchive={archive}
@@ -127,11 +155,23 @@ export default function Home() {
         </main>
       </div>
 
-      {/* Mobile/tablet sidebar drawer */}
       <MobileSidebarDrawer
         isOpen={drawerOpen}
         onClose={() => setDrawerOpen(false)}
       />
+
+      <Modal
+        isOpen={modalOpen}
+        onClose={closeModal}
+        title={modalBookmark ? "Edit bookmark" : "Add bookmark"}
+        titleId="bookmark-modal-title"
+      >
+        <AddEditBookmarkForm
+          bookmark={modalBookmark ?? undefined}
+          onSubmit={handleFormSubmit}
+          onCancel={closeModal}
+        />
+      </Modal>
     </div>
   )
 }
