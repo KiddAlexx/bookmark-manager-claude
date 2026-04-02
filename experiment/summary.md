@@ -3,7 +3,7 @@
 ## Current Status
 
 **Phase**: 1 — Full UI with Local Data
-**Active Step**: Step 10 complete — awaiting approval to proceed to Step 11
+**Active Step**: Step 11 complete — awaiting approval to proceed to Step 12
 
 ---
 
@@ -21,12 +21,13 @@
 | 8 | Add/Edit Bookmark Modal | 2026-04-02 | ✅ Complete |
 | 9 | Delete Confirmation Modal | 2026-04-02 | ✅ Complete |
 | 10 | Theme Toggle | 2026-04-02 | ✅ Complete |
+| 11 | Polish Pass | 2026-04-02 | ✅ Complete |
 
 ---
 
 ## Next Planned Step
 
-**Step 11** — Polish: responsive layout check, hover/focus states audit, empty states, reduced-motion, mobile sidebar tag filter.
+**Step 12** — Vitest unit tests: URL normalization, duplicate detection, search/filter/sort logic, archive/pin state transitions.
 
 ---
 
