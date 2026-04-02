@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Providers } from "@/components/Providers";
 import { AppInit } from "@/components/AppInit";
+import { ToastContainer } from "@/components/ui/Toast";
 import "./globals.css";
 
 const manrope = localFont({
@@ -27,6 +28,7 @@ export default function RootLayout({
         <Providers>
           <AppInit />
           {children}
+          <ToastContainer />
         </Providers>
       </body>
     </html>

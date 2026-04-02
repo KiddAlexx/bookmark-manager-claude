@@ -224,7 +224,7 @@ States:
 | Click archive | Sets isArchived = true; removes from main view |
 | Click unarchive | Sets isArchived = false; returns to main view |
 | Click edit | Opens modal pre-filled with bookmark data |
-| Click copy URL | Copies to clipboard; button shows "Copied!" for 2 seconds |
+| Click copy URL | Copies to clipboard; shows "Link copied to clipboard." toast notification |
 | Click visit | Opens URL in new tab; increments viewCount; sets lastVisited |
 | Click delete | Confirmation prompt; permanently removes bookmark |
 | Submit add/edit form | Validates → fetches metadata if needed → saves → closes modal |
@@ -328,7 +328,35 @@ Built with WXT (Manifest V3, Chrome + Firefox) in `/extension` directory within 
 
 ---
 
-### 10. Responsiveness
+### 10. Toast Notifications
+
+Appear at the bottom-right of the screen. Stack vertically. Auto-dismiss after 4 seconds. Each has a dismiss ✕ button.
+
+| Message | Lucide Icon | Trigger |
+|---|---|---|
+| "Bookmark added successfully." | `Check` | Add bookmark form submitted |
+| "Changes saved." | `Check` | Edit bookmark form submitted |
+| "Link copied to clipboard." | `Copy` | Copy URL action |
+| "Bookmark pinned to top." | `Pin` | Pin action |
+| "Bookmark unpinned." | `PinOff` | Unpin action |
+| "Bookmark archived." | `Archive` | Archive action |
+| "Bookmark restored." | `RotateCcw` | Unarchive action |
+| "Bookmark deleted." | `Trash2` | Delete confirmed |
+
+**Design tokens:**
+- Background: `bg-surface` (white in light, dark teal in dark)
+- Border: `ring-1 ring-line`
+- Icon: `text-ink-sub` (teal-tinted in light, near-white in dark)
+- Text: `text-ink`
+- Shape: `rounded-xl`, `shadow-lg`
+
+**State management:** Zustand `toastStore` — `toasts[]`, `addToast(message, icon)`, `removeToast(id)`. Each toast has a unique id and auto-dismiss timer set on creation.
+
+**Accessibility:** `role="status"` on the container, `aria-live="polite"`, `aria-atomic="true"` on each toast.
+
+---
+
+### 11. Responsiveness
 
 Three target layouts (exact breakpoints confirmed from Figma):
 - **Mobile** (< 640px): Sidebar hidden, accessible via toggle; stacked card layout
@@ -528,61 +556,50 @@ Each step is broken into sub-tasks (a, b, c…). Each sub-task is implemented, r
 | Step | Sub-task | Scope |
 |---|---|---|
 | 1 | ✅ complete | Project scaffold: Next.js 15, TypeScript, Tailwind v4, Lucide, next/font, Vitest + RTL config, folder structure, design tokens from Figma |
-| 2a | | TypeScript types (`src/types/index.ts`) + align `data.json` field names to spec |
-| 2b | | Zod schemas (`src/lib/schemas.ts`) derived from types |
-| 2c | | URL normalization utility (`src/lib/utils/url.ts`) + unit tests |
-| 2d | | localStorage service layer (`src/lib/services/bookmarks.ts`, `user.ts`) + data seeding |
-| 3a | | Zustand bookmarkStore: state shape + all actions |
-| 3b | | Zustand themeStore: toggle + localStorage persist |
-| 4a | | Layout shell: Header component (all breakpoints, search bar, add button) |
-| 4b | | Sidebar component: tag list, nav links, desktop layout |
-| 4c | | Mobile sidebar drawer + responsive wiring + theme toggle wired |
-| 5a | | BookmarkCard: all display fields, favicon with fallback, overflow menu |
-| 5b | | BookmarkCard: hover/focus states + clipboard hook + component tests |
-| 6a | | Bookmark list view: pinned section, regular list, empty states |
-| 6b | | Sort control + filter/search/sort composition + unit tests |
-| 6c | | First Playwright smoke test |
-| 7a | | Add/Edit modal shell: RHF + Zod, all fields, tag input |
-| 7b | | Metadata fetch (Phase 1: Google Favicon API), validation, loading state + component tests |
-| 8a | | Archive view: list, unarchive, delete, empty state |
-| 8b | | Sidebar archive navigation link wired |
-| 9 | | Bookmark detail view: full data display, visit action (confirm modal vs route from Figma first) |
-| 10a | | Responsiveness pass: mobile layout + touch targets |
-| 10b | | Responsiveness pass: tablet + desktop layout |
-| 11a | | Accessibility pass: keyboard nav, ARIA, focus styles |
-| 11b | | Accessibility pass: semantic HTML, live regions, motion |
-| 12 | | Polish: hover/focus QA, edge cases, visual QA against Figma, full test pass |
+| 2 | ✅ complete | TypeScript types + Zod schemas + URL normalization utility + unit tests + localStorage service layer + data seeding |
+| 3 | ✅ complete | Zustand bookmarkStore: state shape + all actions |
+| 4 | ✅ complete | Layout shell: Header + Sidebar + Mobile sidebar drawer + responsive wiring + theme toggle |
+| 5 | ✅ complete | BookmarkCard + BookmarkList + PinnedSection + EmptyState |
+| 6 | ✅ complete | Search + tag filter (OR logic) + sort control + filter/sort composition |
+| 7 | ✅ complete | Archive view: list, search, tag filter, sort, unarchive, delete |
+| 8 | ✅ complete | Add/Edit Bookmark Modal: RHF + Zod, all fields, tag input, focus trap |
+| 9 | ✅ complete | Delete Confirmation Modal |
+| 10 | ✅ complete | Theme toggle: light/dark/system, hydration-safe, next-themes persistence |
+| 11 | ✅ complete | Polish pass: mobile tag filter, focus rings, prefers-reduced-motion, aria-live |
+| 12 | ✅ complete | Vitest unit tests: URL normalization, filter/sort, duplicate detection, archive/pin transitions |
+| 13a | | Toast store (Zustand) + Toast + ToastContainer components + wire into root layout |
+| 13b | | Fire toasts from all bookmark actions across home + archived pages + BookmarkCard copy |
 
 ### Phase 2 — Auth + Database + Images
 
 | Step | Sub-task | Scope |
 |---|---|---|
-| 13a | | Neon setup + Drizzle schema (users, bookmarks, sessions) |
-| 13b | | Migrations + drizzle-zod schema generation |
-| 14a | | Auth.js v5: login/register pages + session handling |
-| 14b | | Google + GitHub OAuth + protected routes |
-| 14c | | Email/password credentials provider |
-| 15 | | Migrate service layer from localStorage to Drizzle/Neon |
-| 16 | | Metadata API route: Cheerio fetch, title/description/favicon extraction |
-| 17a | | Cloudinary: favicon upload pipeline in metadata route |
-| 17b | | Cloudinary: avatar upload, secure server-mediated patterns |
-| 18a | | Duplicate detection: client-side warning |
-| 18b | | Duplicate detection: server-side enforcement + DB unique constraint |
-| 19 | | User profile page: avatar upload, display name edit |
-| 20 | | Cross-device theme sync: persist to user record in DB |
-| 21 | | Phase 2 test pass: auth flow E2E, duplicate detection unit tests, API route tests |
+| 14a | | Neon setup + Drizzle schema (users, bookmarks, sessions) |
+| 14b | | Migrations + drizzle-zod schema generation |
+| 15a | | Auth.js v5: login/register pages + session handling |
+| 15b | | Google + GitHub OAuth + protected routes |
+| 15c | | Email/password credentials provider |
+| 16 | | Migrate service layer from localStorage to Drizzle/Neon |
+| 17 | | Metadata API route: Cheerio fetch, title/description/favicon extraction |
+| 18a | | Cloudinary: favicon upload pipeline in metadata route |
+| 18b | | Cloudinary: avatar upload, secure server-mediated patterns |
+| 19a | | Duplicate detection: client-side warning |
+| 19b | | Duplicate detection: server-side enforcement + DB unique constraint |
+| 20 | | User profile page: avatar upload, display name edit |
+| 21 | | Cross-device theme sync: persist to user record in DB |
+| 22 | | Phase 2 test pass: auth flow E2E, duplicate detection unit tests, API route tests |
 
 ### Phase 3 — Extension + Shortcuts + Final QA
 
 | Step | Sub-task | Scope |
 |---|---|---|
-| 22a | | useKeyboardShortcuts hook + all shortcuts wired |
-| 22b | | Keyboard shortcuts help modal + unit tests |
-| 23a | | WXT extension scaffold: popup UI |
-| 23b | | Extension: save current page action + auth token handling |
-| 24 | | Extension: duplicate detection warning, save confirmation, error states |
-| 25 | | Extension E2E: core save flow test, duplicate warning test |
-| 26 | | Final QA: full regression, extension + main app integration, all tests passing, performance check |
+| 23a | | useKeyboardShortcuts hook + all shortcuts wired |
+| 23b | | Keyboard shortcuts help modal + unit tests |
+| 24a | | WXT extension scaffold: popup UI |
+| 24b | | Extension: save current page action + auth token handling |
+| 25 | | Extension: duplicate detection warning, save confirmation, error states |
+| 26 | | Extension E2E: core save flow test, duplicate warning test |
+| 27 | | Final QA: full regression, extension + main app integration, all tests passing, performance check |
 
 ---
 
