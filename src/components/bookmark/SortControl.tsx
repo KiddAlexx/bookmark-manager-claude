@@ -2,8 +2,9 @@
 
 import { useState, useRef, useEffect } from "react"
 import { ArrowUpDown, Check } from "lucide-react"
+import type { SortMode } from "@/lib/utils/filter"
 
-export type SortMode = "recently-added" | "recently-visited" | "most-visited"
+export type { SortMode }
 
 const OPTIONS: { value: SortMode; label: string }[] = [
   { value: "recently-added", label: "Recently Added" },
@@ -49,7 +50,7 @@ export function SortControl({ value, onChange }: SortControlProps) {
         <ul
           role="listbox"
           aria-label="Sort options"
-          className="absolute right-0 top-9 z-20 min-w-[180px] rounded-xl bg-surface py-1 shadow-lg ring-1 ring-line"
+          className="absolute right-0 top-9 z-20 min-w-45 rounded-xl bg-surface py-1 shadow-lg ring-1 ring-line"
         >
           {OPTIONS.map((option) => {
             const isSelected = option.value === value

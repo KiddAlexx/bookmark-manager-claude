@@ -8,7 +8,8 @@ import { PinnedSection } from "@/components/bookmark/PinnedSection"
 import { BookmarkList } from "@/components/bookmark/BookmarkList"
 import { EmptyState } from "@/components/bookmark/EmptyState"
 import { TagFilter } from "@/components/bookmark/TagFilter"
-import { SortControl, type SortMode } from "@/components/bookmark/SortControl"
+import { SortControl } from "@/components/bookmark/SortControl"
+import { filterAndSortBookmarks, type SortMode } from "@/lib/utils/filter"
 import { AddEditBookmarkForm } from "@/components/bookmark/AddEditBookmarkForm"
 import { DeleteConfirmModal } from "@/components/bookmark/DeleteConfirmModal"
 import { Modal } from "@/components/ui/Modal"
@@ -46,27 +47,8 @@ export default function Home() {
   }, [bookmarks])
 
   const { pinned, unpinned } = useMemo(() => {
-    const lc = query.toLowerCase()
-    const active = bookmarks.filter((b) => {
-      if (b.isArchived) return false
-      if (!b.title.toLowerCase().includes(lc)) return false
-      if (selectedTags.length > 0 && !selectedTags.some((t) => b.tags.includes(t))) return false
-      return true
-    })
-
-    const sorted = [...active].sort((a, b) => {
-      if (sortBy === "recently-added") {
-        return new Date(b.dateAdded).getTime() - new Date(a.dateAdded).getTime()
-      }
-      if (sortBy === "most-visited") {
-        return b.viewCount - a.viewCount
-      }
-      if (!a.lastVisited && !b.lastVisited) return 0
-      if (!a.lastVisited) return 1
-      if (!b.lastVisited) return -1
-      return new Date(b.lastVisited).getTime() - new Date(a.lastVisited).getTime()
-    })
-
+    const active = bookmarks.filter((b) => !b.isArchived)
+    const sorted = filterAndSortBookmarks(active, { query, selectedTags, sortBy })
     return {
       pinned: sorted.filter((b) => b.isPinned),
       unpinned: sorted.filter((b) => !b.isPinned),
