@@ -3,7 +3,7 @@
 ## Current Status
 
 **Phase**: 1 — Full UI with Local Data
-**Active Step**: Step 7 complete — awaiting approval to proceed to Step 8
+**Active Step**: Step 8 complete — awaiting approval to proceed to Step 9
 
 ---
 
@@ -18,12 +18,13 @@
 | 5 | Bookmark Card + List Components | 2026-04-01 | ✅ Complete |
 | 6 | Search, Tag Filter, Sort | 2026-04-01 | ✅ Complete |
 | 7 | Archive View | 2026-04-02 | ✅ Complete |
+| 8 | Add/Edit Bookmark Modal | 2026-04-02 | ✅ Complete |
 
 ---
 
 ## Next Planned Step
 
-**Step 8** — Add/Edit bookmark modal: `BookmarkForm` (React Hook Form + Zod), modal wrapper, wire Add button + Edit callbacks in both pages.
+**Step 9** — Delete confirmation modal: reuse `Modal`, confirm before permanent delete, wire into both pages.
 
 ---
 

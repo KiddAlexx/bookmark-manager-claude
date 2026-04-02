@@ -10,6 +10,7 @@ import { EmptyState } from "@/components/bookmark/EmptyState"
 import { TagFilter } from "@/components/bookmark/TagFilter"
 import { SortControl, type SortMode } from "@/components/bookmark/SortControl"
 import { AddEditBookmarkForm } from "@/components/bookmark/AddEditBookmarkForm"
+import { DeleteConfirmModal } from "@/components/bookmark/DeleteConfirmModal"
 import { Modal } from "@/components/ui/Modal"
 import { useBookmarkStore } from "@/store/bookmarkStore"
 import type { AddBookmarkInput, Bookmark } from "@/types"
@@ -20,9 +21,12 @@ export default function Home() {
   const [selectedTags, setSelectedTags] = useState<string[]>([])
   const [sortBy, setSortBy] = useState<SortMode>("recently-added")
 
-  // Modal state: null = closed, undefined = add mode, Bookmark = edit mode
+  // Add/Edit modal: null = closed, undefined = add mode, Bookmark = edit mode
   const [modalBookmark, setModalBookmark] = useState<Bookmark | null | undefined>(null)
   const modalOpen = modalBookmark !== null
+
+  // Delete confirm: null = closed, Bookmark = pending delete
+  const [deleteTarget, setDeleteTarget] = useState<Bookmark | null>(null)
 
   const bookmarks = useBookmarkStore((s) => s.bookmarks)
   const add = useBookmarkStore((s) => s.add)
@@ -99,6 +103,16 @@ export default function Home() {
     closeModal()
   }
 
+  function requestDelete(id: string) {
+    const bm = bookmarks.find((b) => b.id === id)
+    if (bm) setDeleteTarget(bm)
+  }
+
+  function confirmDelete() {
+    if (deleteTarget) remove(deleteTarget.id)
+    setDeleteTarget(null)
+  }
+
   const tagFilter = (
     <TagFilter
       tags={allTags}
@@ -133,7 +147,7 @@ export default function Home() {
               <PinnedSection
                 bookmarks={pinned}
                 onEdit={openEdit}
-                onDelete={remove}
+                onDelete={requestDelete}
                 onPin={togglePin}
                 onArchive={archive}
                 onVisit={recordVisit}
@@ -141,7 +155,7 @@ export default function Home() {
               <BookmarkList
                 bookmarks={unpinned}
                 onEdit={openEdit}
-                onDelete={remove}
+                onDelete={requestDelete}
                 onPin={togglePin}
                 onArchive={archive}
                 onUnarchive={unarchive}
@@ -172,6 +186,12 @@ export default function Home() {
           onCancel={closeModal}
         />
       </Modal>
+
+      <DeleteConfirmModal
+        bookmarkTitle={deleteTarget?.title ?? null}
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteTarget(null)}
+      />
     </div>
   )
 }

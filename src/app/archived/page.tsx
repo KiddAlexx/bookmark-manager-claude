@@ -9,6 +9,7 @@ import { EmptyState } from "@/components/bookmark/EmptyState"
 import { TagFilter } from "@/components/bookmark/TagFilter"
 import { SortControl, type SortMode } from "@/components/bookmark/SortControl"
 import { AddEditBookmarkForm } from "@/components/bookmark/AddEditBookmarkForm"
+import { DeleteConfirmModal } from "@/components/bookmark/DeleteConfirmModal"
 import { Modal } from "@/components/ui/Modal"
 import { useBookmarkStore } from "@/store/bookmarkStore"
 import type { AddBookmarkInput, Bookmark } from "@/types"
@@ -22,6 +23,9 @@ export default function Archived() {
   // null = closed, undefined = add, Bookmark = edit
   const [modalBookmark, setModalBookmark] = useState<Bookmark | null | undefined>(null)
   const modalOpen = modalBookmark !== null
+
+  // Delete confirm: null = closed, Bookmark = pending delete
+  const [deleteTarget, setDeleteTarget] = useState<Bookmark | null>(null)
 
   const bookmarks = useBookmarkStore((s) => s.bookmarks)
   const add = useBookmarkStore((s) => s.add)
@@ -85,6 +89,16 @@ export default function Archived() {
     closeModal()
   }
 
+  function requestDelete(id: string) {
+    const bm = bookmarks.find((b) => b.id === id)
+    if (bm) setDeleteTarget(bm)
+  }
+
+  function confirmDelete() {
+    if (deleteTarget) remove(deleteTarget.id)
+    setDeleteTarget(null)
+  }
+
   const tagFilter = (
     <TagFilter
       tags={allTags}
@@ -119,7 +133,7 @@ export default function Archived() {
               bookmarks={filtered}
               title="Archived bookmarks"
               onEdit={openEdit}
-              onDelete={remove}
+              onDelete={requestDelete}
               onPin={() => {}}
               onArchive={() => {}}
               onUnarchive={unarchive}
@@ -149,6 +163,12 @@ export default function Archived() {
           onCancel={closeModal}
         />
       </Modal>
+
+      <DeleteConfirmModal
+        bookmarkTitle={deleteTarget?.title ?? null}
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteTarget(null)}
+      />
     </div>
   )
 }
