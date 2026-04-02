@@ -3,7 +3,7 @@
 ## Current Status
 
 **Phase**: 1 — Full UI with Local Data
-**Active Step**: Step 8 complete — awaiting approval to proceed to Step 9
+**Active Step**: Step 10 complete — awaiting approval to proceed to Step 11
 
 ---
 
@@ -19,12 +19,14 @@
 | 6 | Search, Tag Filter, Sort | 2026-04-01 | ✅ Complete |
 | 7 | Archive View | 2026-04-02 | ✅ Complete |
 | 8 | Add/Edit Bookmark Modal | 2026-04-02 | ✅ Complete |
+| 9 | Delete Confirmation Modal | 2026-04-02 | ✅ Complete |
+| 10 | Theme Toggle | 2026-04-02 | ✅ Complete |
 
 ---
 
 ## Next Planned Step
 
-**Step 9** — Delete confirmation modal: reuse `Modal`, confirm before permanent delete, wire into both pages.
+**Step 11** — Polish: responsive layout check, hover/focus states audit, empty states, reduced-motion, mobile sidebar tag filter.
 
 ---
 

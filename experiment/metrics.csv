@@ -7,3 +7,5 @@ step,date,surface,step_name,status,time_spent_minutes,files_created,files_modifi
 6,2026-04-01,web,Search + Tag Filter + Sort,complete,45,2,4,0,1,1,"favicon path bug fixed mid-step; isValidFaviconSrc guard added to BookmarkCard"
 7,2026-04-02,web,Archive View,complete,15,0,1,0,0,0,"Stub replaced with full archive page; search/filter/sort/unarchive/delete all wired"
 8,2026-04-02,web,Add/Edit Bookmark Modal,complete,40,2,2,0,1,1,"RHF + @hookform/resolvers not installed — added during 8a; Modal reusable for Step 9"
+9,2026-04-02,web,Delete Confirmation Modal,complete,15,1,2,0,0,0,"Reuses Modal from Step 8; requestDelete/confirmDelete pattern in both pages"
+10,2026-04-02,web,Theme Toggle,complete,10,1,1,0,0,0,"Cycles light/dark/system; hydration-safe mounted guard; next-themes handles persistence"

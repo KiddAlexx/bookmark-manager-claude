@@ -1,6 +1,7 @@
 "use client"
 
 import { Search, Plus, Menu } from "lucide-react"
+import { ThemeToggle } from "@/components/ui/ThemeToggle"
 
 interface HeaderProps {
   onAddBookmark: () => void
@@ -49,7 +50,10 @@ export function Header({ onAddBookmark, onMenuOpen, onSearch, searchQuery = "" }
         <span className="hidden sm:inline">Add Bookmark</span>
       </button>
 
-      {/* Avatar placeholder */}
+      {/* Theme toggle */}
+      <ThemeToggle />
+
+      {/* Avatar placeholder — replaced in Phase 2 */}
       <div
         aria-hidden="true"
         className="h-8 w-8 shrink-0 rounded-full bg-line"
