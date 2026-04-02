@@ -12,7 +12,9 @@ import { filterAndSortBookmarks, type SortMode } from "@/lib/utils/filter"
 import { AddEditBookmarkForm } from "@/components/bookmark/AddEditBookmarkForm"
 import { DeleteConfirmModal } from "@/components/bookmark/DeleteConfirmModal"
 import { Modal } from "@/components/ui/Modal"
+import { Check, RotateCcw, Trash2 } from "lucide-react"
 import { useBookmarkStore } from "@/store/bookmarkStore"
+import { useToastStore } from "@/store/toastStore"
 import type { AddBookmarkInput, Bookmark } from "@/types"
 
 export default function Archived() {
@@ -34,6 +36,7 @@ export default function Archived() {
   const unarchive = useBookmarkStore((s) => s.unarchive)
   const remove = useBookmarkStore((s) => s.remove)
   const recordVisit = useBookmarkStore((s) => s.recordVisit)
+  const addToast = useToastStore((s) => s.addToast)
 
   const allTags = useMemo(() => {
     const tagSet = new Set<string>()
@@ -66,10 +69,17 @@ export default function Archived() {
   async function handleFormSubmit(data: AddBookmarkInput) {
     if (modalBookmark) {
       update(modalBookmark.id, data)
+      addToast("Changes saved.", Check)
     } else {
       add(data)
+      addToast("Bookmark added successfully.", Check)
     }
     closeModal()
+  }
+
+  function handleUnarchive(id: string) {
+    unarchive(id)
+    addToast("Bookmark restored.", RotateCcw)
   }
 
   function requestDelete(id: string) {
@@ -78,7 +88,10 @@ export default function Archived() {
   }
 
   function confirmDelete() {
-    if (deleteTarget) remove(deleteTarget.id)
+    if (deleteTarget) {
+      remove(deleteTarget.id)
+      addToast("Bookmark deleted.", Trash2)
+    }
     setDeleteTarget(null)
   }
 
@@ -125,7 +138,7 @@ export default function Archived() {
               onDelete={requestDelete}
               onPin={() => {}}
               onArchive={() => {}}
-              onUnarchive={unarchive}
+              onUnarchive={handleUnarchive}
               onVisit={recordVisit}
               sortControl={
                 <SortControl value={sortBy} onChange={setSortBy} />

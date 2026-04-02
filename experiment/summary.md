@@ -3,7 +3,7 @@
 ## Current Status
 
 **Phase**: 1 — Full UI with Local Data
-**Active Step**: Step 12 complete — proceeding to Step 13 (Toast Notifications)
+**Active Step**: Step 13 complete — awaiting approval to proceed to Step 14 (Phase 2: Neon + Drizzle setup)
 
 ---
 
@@ -23,13 +23,13 @@
 | 10 | Theme Toggle | 2026-04-02 | ✅ Complete |
 | 11 | Polish Pass | 2026-04-02 | ✅ Complete |
 | 12 | Vitest Unit Tests | 2026-04-02 | ✅ Complete |
+| 13 | Toast Notifications | 2026-04-02 | ✅ Complete |
 
 ---
 
 ## Next Planned Step
 
-**Step 13** — Toast Notifications: Zustand toast store + Toast/ToastContainer components + wire into all bookmark actions.
-**Step 14** (Phase 2) — Neon setup + Drizzle schema + migrations.
+**Step 14** (Phase 2) — Neon setup + Drizzle schema (users, bookmarks, sessions) + migrations.
 
 ---
 

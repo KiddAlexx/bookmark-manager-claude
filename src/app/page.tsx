@@ -13,7 +13,9 @@ import { filterAndSortBookmarks, type SortMode } from "@/lib/utils/filter"
 import { AddEditBookmarkForm } from "@/components/bookmark/AddEditBookmarkForm"
 import { DeleteConfirmModal } from "@/components/bookmark/DeleteConfirmModal"
 import { Modal } from "@/components/ui/Modal"
+import { Check, Pin, PinOff, Archive, Trash2 } from "lucide-react"
 import { useBookmarkStore } from "@/store/bookmarkStore"
+import { useToastStore } from "@/store/toastStore"
 import type { AddBookmarkInput, Bookmark } from "@/types"
 
 export default function Home() {
@@ -37,6 +39,7 @@ export default function Home() {
   const unarchive = useBookmarkStore((s) => s.unarchive)
   const remove = useBookmarkStore((s) => s.remove)
   const recordVisit = useBookmarkStore((s) => s.recordVisit)
+  const addToast = useToastStore((s) => s.addToast)
 
   const allTags = useMemo(() => {
     const tagSet = new Set<string>()
@@ -79,10 +82,23 @@ export default function Home() {
   async function handleFormSubmit(data: AddBookmarkInput) {
     if (modalBookmark) {
       update(modalBookmark.id, data)
+      addToast("Changes saved.", Check)
     } else {
       add(data)
+      addToast("Bookmark added successfully.", Check)
     }
     closeModal()
+  }
+
+  function handlePin(id: string) {
+    const wasPinned = bookmarks.find((b) => b.id === id)?.isPinned ?? false
+    togglePin(id)
+    addToast(wasPinned ? "Bookmark unpinned." : "Bookmark pinned to top.", wasPinned ? PinOff : Pin)
+  }
+
+  function handleArchive(id: string) {
+    archive(id)
+    addToast("Bookmark archived.", Archive)
   }
 
   function requestDelete(id: string) {
@@ -91,7 +107,10 @@ export default function Home() {
   }
 
   function confirmDelete() {
-    if (deleteTarget) remove(deleteTarget.id)
+    if (deleteTarget) {
+      remove(deleteTarget.id)
+      addToast("Bookmark deleted.", Trash2)
+    }
     setDeleteTarget(null)
   }
 
@@ -136,16 +155,16 @@ export default function Home() {
                 bookmarks={pinned}
                 onEdit={openEdit}
                 onDelete={requestDelete}
-                onPin={togglePin}
-                onArchive={archive}
+                onPin={handlePin}
+                onArchive={handleArchive}
                 onVisit={recordVisit}
               />
               <BookmarkList
                 bookmarks={unpinned}
                 onEdit={openEdit}
                 onDelete={requestDelete}
-                onPin={togglePin}
-                onArchive={archive}
+                onPin={handlePin}
+                onArchive={handleArchive}
                 onUnarchive={unarchive}
                 onVisit={recordVisit}
                 sortControl={

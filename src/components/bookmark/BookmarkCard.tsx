@@ -3,11 +3,12 @@
 import { useState, useRef, useEffect } from "react"
 import Image from "next/image"
 import {
-  Globe, MoreVertical, ExternalLink, Copy, Check,
+  Globe, MoreVertical, ExternalLink, Copy,
   Pin, PinOff, Pencil, Archive, ArchiveRestore, Trash2,
   Eye, Calendar, Clock,
 } from "lucide-react"
 import type { Bookmark } from "@/types"
+import { useToastStore } from "@/store/toastStore"
 
 interface BookmarkCardProps {
   bookmark: Bookmark
@@ -32,8 +33,8 @@ export function BookmarkCard({
   bookmark, onEdit, onDelete, onPin, onArchive, onUnarchive, onVisit,
 }: BookmarkCardProps) {
   const [menuOpen, setMenuOpen] = useState(false)
-  const [copied, setCopied] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
+  const addToast = useToastStore((s) => s.addToast)
 
   // Close menu on outside click
   useEffect(() => {
@@ -53,9 +54,8 @@ export function BookmarkCard({
 
   async function handleCopy() {
     await navigator.clipboard.writeText(bookmark.url)
-    setCopied(true)
+    addToast("Link copied to clipboard.", Copy)
     setMenuOpen(false)
-    setTimeout(() => setCopied(false), 2000)
   }
 
   return (
@@ -98,10 +98,10 @@ export function BookmarkCard({
           {menuOpen && (
             <div
               role="menu"
-              className="absolute right-0 top-9 z-20 min-w-[160px] rounded-xl bg-surface py-1 shadow-lg ring-1 ring-line"
+              className="absolute right-0 top-9 z-20 min-w-40 rounded-xl bg-surface py-1 shadow-lg ring-1 ring-line"
             >
               <MenuItem icon={ExternalLink} label="Visit" onClick={handleVisit} />
-              <MenuItem icon={copied ? Check : Copy} label={copied ? "Copied!" : "Copy URL"} onClick={handleCopy} />
+              <MenuItem icon={Copy} label="Copy URL" onClick={handleCopy} />
               {!bookmark.isArchived && (
                 <MenuItem
                   icon={bookmark.isPinned ? PinOff : Pin}

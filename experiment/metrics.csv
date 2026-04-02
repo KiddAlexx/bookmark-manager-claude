@@ -11,3 +11,4 @@ step,date,surface,step_name,status,time_spent_minutes,files_created,files_modifi
 10,2026-04-02,web,Theme Toggle,complete,10,1,1,0,0,0,"Cycles light/dark/system; hydration-safe mounted guard; next-themes handles persistence"
 11,2026-04-02,web,Polish Pass,complete,20,0,6,0,3,3,"Mobile tag filter wired; ring-inset focus on dropdown items; prefers-reduced-motion CSS; aria-live result count"
 12,2026-04-02,shared,Vitest Unit Tests,complete,30,3,3,43,1,1,"filterAndSortBookmarks extracted; readonly string[] fix; 60 tests total passing"
+13,2026-04-02,web,Toast Notifications,complete,25,2,4,0,0,0,"Zustand toastStore; ToastContainer fixed bottom-right; 8 toast messages; copied state removed from BookmarkCard"
