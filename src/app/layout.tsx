@@ -23,7 +23,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${manrope.variable} h-full`} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${manrope.variable} h-full`}
+      suppressHydrationWarning
+    >
       <body className="min-h-full font-sans antialiased">
         <Providers>
           <AppInit />

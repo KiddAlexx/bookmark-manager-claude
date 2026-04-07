@@ -2,6 +2,26 @@
 
 ---
 
+## [2026-04-07] Decision: Use @next/env to load .env.local for drizzle-kit
+
+**Context**: `drizzle-kit` runs outside Next.js and only auto-loads `.env`, not `.env.local`. The DB credentials live in `.env.local` per Next.js convention.
+**Options considered**: Copy vars to `.env`, use `dotenv-cli` prefix, use `@next/env` in `drizzle.config.ts`.
+**Decision**: Import `loadEnvConfig` from `@next/env` at the top of `drizzle.config.ts`.
+**Rationale**: `@next/env` is already a transitive dependency; it respects `.env.local` override precedence exactly as Next.js does. No extra package needed.
+**Consequences**: `drizzle.config.ts` has a side-effect import. Acceptable for a config file.
+
+---
+
+## [2026-04-07] Decision: Dual timestamp strategy — Date in DB, string in app
+
+**Context**: Drizzle schema uses `timestamp({ mode: "date" })` so inferred types are `Date`. The existing `Bookmark` interface (from Phase 1) uses ISO strings throughout.
+**Options considered**: Change schema to `{ mode: "string" }` to keep strings end-to-end; keep `{ mode: "date" }` and serialize in the service layer.
+**Decision**: Keep `{ mode: "date" }` in DB schema; service layer (Step 16) serializes `Date → string` when mapping `DbBookmark → Bookmark`.
+**Rationale**: `Date` objects are more type-safe for DB operations and sorting. ISO string is the right format for JSON serialization and the client. The service layer is the correct boundary for this transform.
+**Consequences**: `DbBookmark` (from drizzle-zod) and `Bookmark` (app type) coexist until Step 16 reconciles them.
+
+---
+
 ## [2026-04-01] Decision: Retain Next.js 15.x (downgrade from 16.2.2)
 
 **Context**: `create-next-app` scaffolded with Next.js 16.2.2. SPEC targets 15.x.

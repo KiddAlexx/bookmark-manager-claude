@@ -36,7 +36,7 @@ export function ToastContainer() {
       role="status"
       aria-live="polite"
       aria-label="Notifications"
-      className="fixed bottom-5 right-5 z-50 flex w-80 flex-col gap-2"
+      className="fixed top-16 right-4 z-50 flex w-80 flex-col gap-2"
     >
       {toasts.map((toast) => (
         <Toast key={toast.id} {...toast} />

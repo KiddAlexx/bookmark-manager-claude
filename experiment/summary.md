@@ -3,7 +3,7 @@
 ## Current Status
 
 **Phase**: 1 — Full UI with Local Data
-**Active Step**: Step 13 complete — awaiting approval to proceed to Step 14 (Phase 2: Neon + Drizzle setup)
+**Active Step**: Step 14 complete — awaiting approval to proceed to Step 15 (Auth.js v5)
 
 ---
 
@@ -24,12 +24,13 @@
 | 11 | Polish Pass | 2026-04-02 | ✅ Complete |
 | 12 | Vitest Unit Tests | 2026-04-02 | ✅ Complete |
 | 13 | Toast Notifications | 2026-04-02 | ✅ Complete |
+| 14 | Neon + Drizzle Schema + Migrations | 2026-04-07 | ✅ Complete |
 
 ---
 
 ## Next Planned Step
 
-**Step 14** (Phase 2) — Neon setup + Drizzle schema (users, bookmarks, sessions) + migrations.
+**Step 15** — Auth.js v5: login/register pages + session handling + OAuth + credentials.
 
 ---
 
