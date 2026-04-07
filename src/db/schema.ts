@@ -7,6 +7,7 @@ import {
   uniqueIndex,
   primaryKey,
 } from "drizzle-orm/pg-core"
+import type { AdapterAccountType } from "next-auth/adapters"
 
 // ─── Auth.js v5 tables ─────────────────────────────────────────────────────────
 
@@ -17,6 +18,7 @@ export const users = pgTable("users", {
   emailVerified: timestamp("email_verified", { mode: "date" }),
   image: text("image"),
   avatarUrl: text("avatar_url"),
+  passwordHash: text("password_hash"),
   createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
 })
 
@@ -26,20 +28,20 @@ export const accounts = pgTable(
     userId: text("user_id")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
-    type: text("type").notNull(),
+    type: text("type").$type<AdapterAccountType>().notNull(),
     provider: text("provider").notNull(),
     providerAccountId: text("provider_account_id").notNull(),
-    refreshToken: text("refresh_token"),
-    accessToken: text("access_token"),
-    expiresAt: integer("expires_at"),
-    tokenType: text("token_type"),
+    refresh_token: text("refresh_token"),
+    access_token: text("access_token"),
+    expires_at: integer("expires_at"),
+    token_type: text("token_type"),
     scope: text("scope"),
-    idToken: text("id_token"),
-    sessionState: text("session_state"),
+    id_token: text("id_token"),
+    session_state: text("session_state"),
   },
-  (table) => ({
-    compoundKey: primaryKey({ columns: [table.provider, table.providerAccountId] }),
-  }),
+  (table) => [
+    primaryKey({ columns: [table.provider, table.providerAccountId] }),
+  ],
 )
 
 export const sessions = pgTable("sessions", {
@@ -57,9 +59,9 @@ export const verificationTokens = pgTable(
     token: text("token").notNull(),
     expires: timestamp("expires", { mode: "date" }).notNull(),
   },
-  (table) => ({
-    compoundKey: primaryKey({ columns: [table.identifier, table.token] }),
-  }),
+  (table) => [
+    primaryKey({ columns: [table.identifier, table.token] }),
+  ],
 )
 
 // ─── Application tables ────────────────────────────────────────────────────────
@@ -83,7 +85,7 @@ export const bookmarks = pgTable(
     isPinned: boolean("is_pinned").notNull().default(false),
     isArchived: boolean("is_archived").notNull().default(false),
   },
-  (table) => ({
-    uniqueUserUrl: uniqueIndex("unique_user_url").on(table.userId, table.normalizedUrl),
-  }),
+  (table) => [
+    uniqueIndex("unique_user_url").on(table.userId, table.normalizedUrl),
+  ],
 )
