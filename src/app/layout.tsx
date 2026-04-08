@@ -1,27 +1,30 @@
-import type { Metadata } from "next";
-import localFont from "next/font/local";
-import { Providers } from "@/components/Providers";
-import { AppInit } from "@/components/AppInit";
-import { ToastContainer } from "@/components/ui/Toast";
-import "./globals.css";
+import type { Metadata } from "next"
+import localFont from "next/font/local"
+import { auth } from "@/auth"
+import { Providers } from "@/components/Providers"
+import { AppInit } from "@/components/AppInit"
+import { ToastContainer } from "@/components/ui/Toast"
+import "./globals.css"
 
 const manrope = localFont({
   src: "../../assets/fonts/Manrope/Manrope-VariableFont_wght.ttf",
   variable: "--font-manrope",
   display: "swap",
   weight: "200 800",
-});
+})
 
 export const metadata: Metadata = {
   title: "Bookmark Manager",
   description: "Save, organise, and revisit your favourite links.",
-};
+}
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
+  const session = await auth()
+
   return (
     <html
       lang="en"
@@ -29,12 +32,12 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full font-sans antialiased">
-        <Providers>
+        <Providers session={session}>
           <AppInit />
           {children}
           <ToastContainer />
         </Providers>
       </body>
     </html>
-  );
+  )
 }
