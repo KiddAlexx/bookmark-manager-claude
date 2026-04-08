@@ -2,6 +2,26 @@
 
 ---
 
+## [2026-04-08] Decision: Skip GitHub OAuth — Google + Credentials only
+
+**Context**: SPEC included GitHub OAuth as a third sign-in provider. User decided to skip it during Step 15 implementation.
+**Options considered**: Implement GitHub OAuth alongside Google, skip entirely.
+**Decision**: GitHub OAuth skipped; only Google OAuth and email/password Credentials are implemented.
+**Rationale**: User preference — reduces OAuth app setup complexity with no functional impact on core requirements.
+**Consequences**: GitHub provider can be added later by registering an OAuth app and adding `GitHub` to the `providers` array in `src/auth.ts`.
+
+---
+
+## [2026-04-08] Decision: Auth.js v5 database sessions over JWT
+
+**Context**: Auth.js v5 supports both JWT (stateless) and database (stateful) session strategies.
+**Options considered**: JWT sessions (no DB read per request), database sessions (session row persisted in `sessions` table).
+**Decision**: `session: { strategy: "database" }`.
+**Rationale**: DrizzleAdapter is optimized for database sessions. Supports server-side invalidation. Consistent with Phase 2 persistence approach.
+**Consequences**: Every authenticated request reads the `sessions` table. Acceptable for a Neon/Postgres setup at this scale.
+
+---
+
 ## [2026-04-07] Decision: Use @next/env to load .env.local for drizzle-kit
 
 **Context**: `drizzle-kit` runs outside Next.js and only auto-loads `.env`, not `.env.local`. The DB credentials live in `.env.local` per Next.js convention.

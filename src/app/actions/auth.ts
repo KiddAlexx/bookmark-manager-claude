@@ -1,14 +1,14 @@
 "use server"
 
-import { AuthError } from "next-auth"
 import { eq } from "drizzle-orm"
 import bcrypt from "bcryptjs"
 import { z } from "zod"
-import { signIn, signOut } from "@/auth"
 import { db } from "@/db"
 import { users } from "@/db/schema"
 
 // ─── Sign in with credentials ──────────────────────────────────────────────────
+// Note: actual sign-in is handled by NextAuth's built-in POST handler.
+// This action is used for server-side validation before redirecting.
 
 const signInSchema = z.object({
   email: z.string().email("Must be a valid email"),
@@ -17,7 +17,7 @@ const signInSchema = z.object({
 
 export type AuthActionState = { error?: string } | undefined
 
-export async function signInWithCredentials(
+export async function validateSignIn(
   _prev: AuthActionState,
   formData: FormData,
 ): Promise<AuthActionState> {
@@ -30,33 +30,7 @@ export async function signInWithCredentials(
     return { error: parsed.error.issues[0].message }
   }
 
-  try {
-    await signIn("credentials", {
-      email: parsed.data.email,
-      password: parsed.data.password,
-      redirectTo: "/",
-    })
-  } catch (error) {
-    if (error instanceof AuthError) {
-      if (error.type === "CredentialsSignin") {
-        return { error: "Invalid email or password." }
-      }
-      return { error: "Something went wrong. Please try again." }
-    }
-    throw error // re-throw redirect
-  }
-}
-
-// ─── Sign in with Google ───────────────────────────────────────────────────────
-
-export async function signInWithGoogle() {
-  await signIn("google", { redirectTo: "/" })
-}
-
-// ─── Sign out ──────────────────────────────────────────────────────────────────
-
-export async function signOutAction() {
-  await signOut({ redirectTo: "/sign-in" })
+  return undefined
 }
 
 // ─── Register ─────────────────────────────────────────────────────────────────
@@ -90,7 +64,6 @@ export async function registerUser(
 
   const { name, email, password } = parsed.data
 
-  // Check for existing account
   const [existing] = await db
     .select({ id: users.id })
     .from(users)
@@ -110,13 +83,6 @@ export async function registerUser(
     passwordHash,
   })
 
-  // Sign in immediately after registration
-  try {
-    await signIn("credentials", { email, password, redirectTo: "/" })
-  } catch (error) {
-    if (error instanceof AuthError) {
-      return { error: "Account created but sign-in failed. Please sign in manually." }
-    }
-    throw error // re-throw redirect
-  }
+  // Return a success signal — the client will call signIn() from next-auth/react
+  return { error: undefined }
 }

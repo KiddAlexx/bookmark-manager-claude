@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import localFont from "next/font/local"
-import { auth } from "@/auth"
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/auth"
 import { Providers } from "@/components/Providers"
 import { AppInit } from "@/components/AppInit"
 import { ToastContainer } from "@/components/ui/Toast"
@@ -23,7 +24,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const session = await auth()
+  const session = await getServerSession(authOptions)
 
   return (
     <html

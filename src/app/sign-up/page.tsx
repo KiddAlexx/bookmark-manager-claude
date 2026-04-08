@@ -2,9 +2,12 @@
 
 import { useActionState } from "react"
 import { useFormStatus } from "react-dom"
+import { signIn } from "next-auth/react"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Bookmark } from "lucide-react"
 import { registerUser } from "@/app/actions/auth"
+import type { AuthActionState } from "@/app/actions/auth"
 
 function SubmitButton() {
   const { pending } = useFormStatus()
@@ -20,7 +23,27 @@ function SubmitButton() {
 }
 
 export default function SignUpPage() {
-  const [state, action] = useActionState(registerUser, undefined)
+  const router = useRouter()
+
+  async function handleRegister(prev: AuthActionState, formData: FormData): Promise<AuthActionState> {
+    const result = await registerUser(prev, formData)
+
+    // If no error, registration succeeded — sign in automatically
+    if (!result?.error) {
+      await signIn("credentials", {
+        email: formData.get("email") as string,
+        password: formData.get("password") as string,
+        redirect: false,
+      })
+      router.push("/")
+      router.refresh()
+      return undefined
+    }
+
+    return result
+  }
+
+  const [state, action] = useActionState(handleRegister, undefined)
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-canvas px-4">

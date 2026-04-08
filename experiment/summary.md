@@ -2,8 +2,8 @@
 
 ## Current Status
 
-**Phase**: 1 — Full UI with Local Data
-**Active Step**: Step 14 complete — awaiting approval to proceed to Step 15 (Auth.js v5)
+**Phase**: 2 — Backend + Auth + Persistence
+**Active Step**: Step 15 complete — awaiting approval to proceed to Step 16 (service layer migration to Drizzle/Neon)
 
 ---
 
@@ -25,12 +25,13 @@
 | 12 | Vitest Unit Tests | 2026-04-02 | ✅ Complete |
 | 13 | Toast Notifications | 2026-04-02 | ✅ Complete |
 | 14 | Neon + Drizzle Schema + Migrations | 2026-04-07 | ✅ Complete |
+| 15 | Auth.js v5: Sign-in, Sign-up, Session, Route Guards | 2026-04-08 | ✅ Complete |
 
 ---
 
 ## Next Planned Step
 
-**Step 15** — Auth.js v5: login/register pages + session handling + OAuth + credentials.
+**Step 16** — Migrate service layer from localStorage to Drizzle/Neon; all bookmark CRUD goes through the database.
 
 ---
 

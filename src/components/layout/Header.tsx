@@ -2,6 +2,7 @@
 
 import { Search, Plus, Menu } from "lucide-react"
 import { ThemeToggle } from "@/components/ui/ThemeToggle"
+import { UserMenu } from "@/components/layout/UserMenu"
 
 interface HeaderProps {
   onAddBookmark: () => void
@@ -53,11 +54,7 @@ export function Header({ onAddBookmark, onMenuOpen, onSearch, searchQuery = "" }
       {/* Theme toggle */}
       <ThemeToggle />
 
-      {/* Avatar placeholder — replaced in Phase 2 */}
-      <div
-        aria-hidden="true"
-        className="h-8 w-8 shrink-0 rounded-full bg-line"
-      />
+      <UserMenu />
     </header>
   )
 }

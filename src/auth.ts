@@ -1,7 +1,7 @@
 import NextAuth from "next-auth"
-import Google from "next-auth/providers/google"
-import Credentials from "next-auth/providers/credentials"
-import { DrizzleAdapter } from "@auth/drizzle-adapter"
+import type { NextAuthOptions } from "next-auth"
+import GoogleProvider from "next-auth/providers/google"
+import CredentialsProvider from "next-auth/providers/credentials"
 import { eq } from "drizzle-orm"
 import bcrypt from "bcryptjs"
 import { z } from "zod"
@@ -13,17 +13,20 @@ const credentialsSchema = z.object({
   password: z.string().min(1),
 })
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
-  adapter: DrizzleAdapter(db),
+export const authOptions: NextAuthOptions = {
   providers: [
-    Google,
-    Credentials({
+    GoogleProvider({
+      clientId: process.env.AUTH_GOOGLE_ID!,
+      clientSecret: process.env.AUTH_GOOGLE_SECRET!,
+    }),
+    CredentialsProvider({
+      name: "credentials",
       credentials: {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
-      authorize: async (raw) => {
-        const parsed = credentialsSchema.safeParse(raw)
+      async authorize(credentials) {
+        const parsed = credentialsSchema.safeParse(credentials)
         if (!parsed.success) return null
 
         const { email, password } = parsed.data
@@ -42,14 +45,49 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       },
     }),
   ],
-  session: { strategy: "database" },
+  session: { strategy: "jwt" },
   pages: {
     signIn: "/sign-in",
   },
   callbacks: {
-    session: ({ session, user }) => ({
-      ...session,
-      user: { ...session.user, id: user.id },
-    }),
+    async signIn({ user, account }) {
+      // For OAuth providers, upsert the user into our DB
+      if (account?.provider === "google" && user.email) {
+        const [existing] = await db
+          .select({ id: users.id })
+          .from(users)
+          .where(eq(users.email, user.email))
+          .limit(1)
+
+        if (!existing) {
+          const newId = crypto.randomUUID()
+          await db.insert(users).values({
+            id: newId,
+            name: user.name ?? "",
+            email: user.email,
+            image: user.image ?? null,
+          })
+          user.id = newId
+        } else {
+          user.id = existing.id
+        }
+      }
+      return true
+    },
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id
+      }
+      return token
+    },
+    async session({ session, token }) {
+      if (token.id) {
+        session.user.id = token.id as string
+      }
+      return session
+    },
   },
-})
+  secret: process.env.NEXTAUTH_SECRET,
+}
+
+export default NextAuth(authOptions)

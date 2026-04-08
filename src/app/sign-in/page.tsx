@@ -1,26 +1,42 @@
 "use client"
 
-import { useActionState } from "react"
-import { useFormStatus } from "react-dom"
+import { useState } from "react"
+import { signIn } from "next-auth/react"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Bookmark } from "lucide-react"
-import { signInWithCredentials, signInWithGoogle } from "@/app/actions/auth"
-
-function SubmitButton() {
-  const { pending } = useFormStatus()
-  return (
-    <button
-      type="submit"
-      disabled={pending}
-      className="w-full rounded-lg bg-teal-700 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-teal-800 focus-visible:ring-2 focus-visible:ring-teal-700 focus-visible:ring-offset-2 focus-visible:outline-none disabled:opacity-50"
-    >
-      {pending ? "Signing in…" : "Log in"}
-    </button>
-  )
-}
 
 export default function SignInPage() {
-  const [state, action] = useActionState(signInWithCredentials, undefined)
+  const router = useRouter()
+  const [error, setError] = useState<string | null>(null)
+  const [pending, setPending] = useState(false)
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    setError(null)
+    setPending(true)
+
+    const formData = new FormData(e.currentTarget)
+    const result = await signIn("credentials", {
+      email: formData.get("email") as string,
+      password: formData.get("password") as string,
+      redirect: false,
+    })
+
+    setPending(false)
+
+    if (result?.error) {
+      setError("Invalid email or password.")
+      return
+    }
+
+    router.push("/")
+    router.refresh()
+  }
+
+  async function handleGoogleSignIn() {
+    await signIn("google", { callbackUrl: "/" })
+  }
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-canvas px-4">
@@ -41,7 +57,7 @@ export default function SignInPage() {
         </p>
 
         {/* Credentials form */}
-        <form action={action} className="flex flex-col gap-4">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="flex flex-col gap-1.5">
             <label htmlFor="email" className="text-sm font-medium text-ink">
               Email
@@ -70,13 +86,19 @@ export default function SignInPage() {
             />
           </div>
 
-          {state?.error && (
+          {error && (
             <p role="alert" className="text-xs text-danger-600">
-              {state.error}
+              {error}
             </p>
           )}
 
-          <SubmitButton />
+          <button
+            type="submit"
+            disabled={pending}
+            className="w-full rounded-lg bg-teal-700 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-teal-800 focus-visible:ring-2 focus-visible:ring-teal-700 focus-visible:ring-offset-2 focus-visible:outline-none disabled:opacity-50"
+          >
+            {pending ? "Signing in…" : "Log in"}
+          </button>
         </form>
 
         {/* Divider */}
@@ -87,29 +109,22 @@ export default function SignInPage() {
         </div>
 
         {/* Google OAuth */}
-        <form action={signInWithGoogle}>
-          <button
-            type="submit"
-            className="flex w-full items-center justify-center gap-2.5 rounded-lg border border-line bg-surface px-4 py-2.5 text-sm font-medium text-ink transition-colors hover:bg-surface-alt focus-visible:ring-2 focus-visible:ring-teal-700 focus-visible:ring-offset-2 focus-visible:outline-none"
-          >
-            <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
-              <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615Z" fill="#4285F4"/>
-              <path d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18Z" fill="#34A853"/>
-              <path d="M3.964 10.707A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.707V4.961H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.039l3.007-2.332Z" fill="#FBBC05"/>
-              <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.961L3.964 6.293C4.672 4.166 6.656 3.58 9 3.58Z" fill="#EA4335"/>
-            </svg>
-            Continue with Google
-          </button>
-        </form>
+        <button
+          type="button"
+          onClick={handleGoogleSignIn}
+          className="flex w-full items-center justify-center gap-2.5 rounded-lg border border-line bg-surface px-4 py-2.5 text-sm font-medium text-ink transition-colors hover:bg-surface-alt focus-visible:ring-2 focus-visible:ring-teal-700 focus-visible:ring-offset-2 focus-visible:outline-none"
+        >
+          <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+            <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615Z" fill="#4285F4"/>
+            <path d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18Z" fill="#34A853"/>
+            <path d="M3.964 10.707A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.707V4.961H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.039l3.007-2.332Z" fill="#FBBC05"/>
+            <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.961L3.964 6.293C4.672 4.166 6.656 3.58 9 3.58Z" fill="#EA4335"/>
+          </svg>
+          Continue with Google
+        </button>
 
         {/* Footer links */}
         <div className="mt-6 flex flex-col items-center gap-2 text-xs text-ink-muted">
-          <p>
-            Forgot password?{" "}
-            <Link href="/reset-password" className="font-medium text-ink underline-offset-2 hover:underline focus-visible:outline-none focus-visible:underline">
-              Reset it
-            </Link>
-          </p>
           <p>
             Don&apos;t have an account?{" "}
             <Link href="/sign-up" className="font-medium text-ink underline-offset-2 hover:underline focus-visible:outline-none focus-visible:underline">

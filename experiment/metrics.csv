@@ -13,3 +13,4 @@ step,date,surface,step_name,status,time_spent_minutes,files_created,files_modifi
 12,2026-04-02,shared,Vitest Unit Tests,complete,30,3,3,43,1,1,"filterAndSortBookmarks extracted; readonly string[] fix; 60 tests total passing"
 13,2026-04-02,web,Toast Notifications,complete,25,2,4,0,0,0,"Zustand toastStore; ToastContainer fixed bottom-right; 8 toast messages; copied state removed from BookmarkCard"
 14,2026-04-07,backend,Neon + Drizzle Schema,complete,40,6,2,0,1,1,"5 tables; initial migration applied; drizzle-zod schemas; @next/env fix for .env.local"
+15,2026-04-08,backend,Auth.js v5 + Sign-in/Sign-up,complete,50,5,4,0,4,4,"Google + Credentials providers; bcrypt cost 12; middleware route guards; snake_case accounts fix; deprecated pgTable syntax fixed"
